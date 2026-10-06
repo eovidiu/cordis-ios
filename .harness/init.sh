@@ -27,7 +27,13 @@ case "${1:-}" in
     feature="${2:-}"
     filter="$(filter_for "$feature")"
     case "$feature" in
-      F008) swift test --package-path "$SHOWCASE" ;;
+      F008)
+        swift test --package-path "$SHOWCASE"
+        # compile the SwiftUI app too; XCUITests stay behind run.sh uitest
+        (cd Examples/CordisShowcase && xcodegen generate --quiet && xcodebuild \
+          -project CordisShowcase.xcodeproj -scheme CordisShowcase \
+          -destination 'generic/platform=iOS Simulator' -derivedDataPath build/DerivedData \
+          -skipMacroValidation -quiet build) ;;
       F009) docs/check.sh ;;
       *) swift test --filter "$filter" ;;
     esac ;;

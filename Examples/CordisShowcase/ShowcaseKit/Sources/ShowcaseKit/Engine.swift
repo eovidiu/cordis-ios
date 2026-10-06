@@ -93,7 +93,21 @@ public final class ShowcaseEngine {
     case .setEnabled(let id, let enabled):
       try await loader.setDisabled(id: id, !enabled)
     case .updateConfig(let id, let config):
-      try await loader.update(id: id, config: config)
+      // A running fiber validates before anything is stored, and the
+      // loader's internal/update listener persists only accepted configs.
+      // `loader.update` would save first, so a rejected config would be
+      // what the next launch starts with.
+      guard let fiber = loader.fiber(for: id) else {
+        try await loader.update(id: id, config: config)
+        return
+      }
+      do {
+        try await fiber.update(config)
+      } catch let error as ValidationError {
+        root.logger.error(error)
+      } catch {
+        // a failed reload is already logged by the fiber
+      }
     case .restart(let id):
       guard let fiber = loader.fiber(for: id) else { throw ShowcaseError.notRunning(id) }
       try await fiber.restart()
@@ -130,7 +144,13 @@ public final class ShowcaseEngine {
     if let subject { _ = label(of: subject) }
     timeline.append(Record(event: TimelineEvent(id: nextEventID, date: Date(), kind: kind, text: text), subject: subject))
     nextEventID += 1
-    if timeline.count > timelineLimit { timeline.removeFirst(timeline.count - timelineLimit) }
+    if timeline.count > timelineLimit {
+      timeline.removeFirst(timeline.count - timelineLimit)
+      // forget labels of fibers no record holds any more: a deallocated
+      // fiber's ObjectIdentifier can be reused by a new fiber
+      let held = Set(timeline.compactMap { $0.subject.map(ObjectIdentifier.init) })
+      labels = labels.filter { held.contains($0.key) }
+    }
     scheduleRefresh()
   }
 

@@ -89,7 +89,8 @@ In the showcase, the `night` group isolates `theme`. Inside the group, `night-ca
 A plugin's `Config` is `Decodable & Sendable`, with an optional static `validate`. The loader stores each entry's config as JSON and decodes it for the plugin. A config that fails decoding or validation never reaches `apply()`:
 
 - When the plugin starts, the fiber fails with a `ValidationError`.
-- On `update`, the running instance keeps its previous config and the error is logged.
+- With `fiber.update(config)`, the running instance keeps its previous config, nothing is saved, and the update throws. The loader's `internal/update` listener persists only configs that were accepted. The showcase edits configs this way.
+- With `loader.update(id:config:)`, the entry is saved first and then reconciled, so a rejected config is still saved: the running fiber keeps the old one and logs the error, but the next launch starts from the rejected config and fails.
 
 ![Validation: the greeter rejects an empty name and the error appears as an alert](../assets/screenshots/validation.png)
 

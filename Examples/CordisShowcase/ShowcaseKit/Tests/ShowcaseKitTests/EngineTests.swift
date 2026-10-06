@@ -87,6 +87,26 @@ struct ShowcaseEngineTests {
     #expect(card(engine, owner: "greeter")?.value == "Hello, World 🌍")
   }
 
+  @Test("a rejected config is not persisted, so a relaunch still runs the last accepted one")
+  func rejectedConfigNotPersisted() async throws {
+    let store = InMemoryEntryStore(ShowcaseCatalog.defaultEntries)
+    let engine = ShowcaseEngine(store: store)
+    try await engine.start()
+    let accepted: JSONValue = .object(["name": .string("World"), "emoji": .string("🌍")])
+    try await run(engine, .updateConfig("greeter", accepted))
+    #expect(store.entries.first { $0.id == "greeter" }?.config == accepted)
+
+    let rejected = try await run(engine, .updateConfig("greeter", .object(["name": .string("")])))
+    #expect(rejected.errors.count == 1)
+    #expect(store.entries.first { $0.id == "greeter" }?.config == accepted)
+    #expect(engine.snapshot().row("greeter")?.config == JSONText.pretty(accepted))
+
+    let relaunched = ShowcaseEngine(store: store)
+    try await relaunched.start()
+    #expect(states(relaunched)["greeter"] == .active)
+    #expect(card(relaunched, owner: "greeter")?.value == "Hello, World 🌍")
+  }
+
   @Test("adding the missing service loads its waiting consumer")
   func addingService() async throws {
     let engine = try await startedEngine()
