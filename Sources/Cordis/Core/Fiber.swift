@@ -48,14 +48,27 @@ public final class Fiber {
   var disposables = DisposableList<FiberDisposable>()
   var updateHooks = DisposableList<ErasedWaterfall>()
 
+  /// Strong while the fiber is live; cleared on disposal, after which
+  /// `weakCtx` keeps the context only as long as someone else does. This
+  /// breaks the Fiber ↔ Context cycle that would otherwise leak every
+  /// disposed plugin.
   private var _ctx: Context?
+  private weak var weakCtx: Context?
+  private var intercepts: [String: any Sendable] = [:]
   private let injectNames: [String]
   private var epoch: String
   private var staged: [String: Impl] = [:]
   private var disposeHandle: EffectHandle?
 
-  /// The fiber's own context (`ctx.fiber === self`).
-  public var ctx: Context { _ctx! }
+  /// The fiber's own context (`ctx.fiber === self`). After disposal, a
+  /// context that nobody else holds is rebuilt on access; it is equivalent
+  /// (same fiber, parent and tables) but not the same object.
+  public var ctx: Context {
+    if let ctx = _ctx ?? weakCtx { return ctx }
+    let ctx = parent.extend(fiber: self, intercepts: intercepts)
+    weakCtx = ctx
+    return ctx
+  }
 
   /// Root fiber (`runtime == nil`), always active.
   init(root: Context) {
@@ -88,7 +101,6 @@ public final class Fiber {
   /// Second half of the cordis `Fiber` constructor (`fiber.ts:122-213`).
   func start(rawConfig: (any Sendable)?) throws {
     guard let runtime else { return }
-    var intercepts: [String: any Sendable] = [:]
     for name in injectNames {
       if let config = inject[name], let config { intercepts[name] = config }
     }
@@ -127,6 +139,9 @@ public final class Fiber {
         // cordis leaves a fiber that was pending or failed in that state;
         // settle every disposed fiber on `.disposed`.
         updateState { nil }
+        weakCtx = _ctx
+        _ctx = nil
+        disposeHandle = nil
       }
     })
   }
@@ -142,6 +157,13 @@ public final class Fiber {
   }
 
   public var isRoot: Bool { runtime == nil }
+
+  /// Injected service names that are not usable right now (not provided in
+  /// this fiber's realm, provider not active, or its `check` failed), in
+  /// declaration order. Empty when the fiber can run.
+  public var missingInjections: [String] {
+    injectNames.filter { staged[$0] == nil }
+  }
 
   public func assertActive() throws {
     if uid == nil { throw CordisError.inactiveEffect }
@@ -305,8 +327,8 @@ public final class Fiber {
 
   /// Unloads and reloads the plugin with its current config.
   public func restart() async throws {
-    let fiber = ctx.fiber
-    try fiber.assertActive()
+    try assertActive()
+    let fiber = self
     fiber.setEpoch(Self.inactive)
     fiber.refresh()
     try await fiber.await()
@@ -316,8 +338,8 @@ public final class Fiber {
   /// may veto by not calling `next`), then stores the config, clears a
   /// previous failure and restarts. Rethrows the reload error.
   public func update(_ config: (any Sendable)?, noSave: Bool = false) async throws {
-    let fiber = ctx.fiber
-    try fiber.assertActive()
+    try assertActive()
+    let fiber = self
     guard let runtime = fiber.runtime else { return }
     let resolved = try runtime.resolveConfig(config)
     try await fiber.ctx.waterfall(UpdateEvent.self, (fiber: fiber, config: resolved, noSave: noSave)) {

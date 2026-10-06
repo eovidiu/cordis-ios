@@ -29,6 +29,7 @@
 - GitHub Pages needed the repo public (plan refused Pages on private repo, HTTP 422); user chose to make cordis-ios public (2026-10)
 
 ## Gotchas
+- Fiber holds its ctx strongly only while live; on disposal it switches to weak and `fiber.ctx` rebuilds an equivalent context if needed (breaks the Fiber<->Context leak; FiberLeakTests). Tests using static weak probes must not share a probe type across parallel tests
 - A trailing closure without `await` passed to `ctx.effect { }` selects the sync `scoped:` overload; JS "async" effects without awaits must `await Task.yield()` to get async semantics
 - Synthesized Decodable ignores property defaults: plugin configs decoded from `{}` need optional fields
 - Swift Testing + `assertMacroExpansion`: use SwiftSyntaxMacrosGenericTestSupport with `failureHandler: Issue.record`; the XCTest variant does not fail Swift Testing tests

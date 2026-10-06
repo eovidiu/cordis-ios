@@ -290,3 +290,24 @@ struct FiberTests {
     #expect(consumer.inertia == nil)
   }
 }
+
+@Suite("FiberMissingInjectionTests")
+@CordisActor
+struct FiberMissingInjectionTests {
+  @Test("missingInjections lists the injected services that are not provided")
+  func missingInjections() async throws {
+    let root = Context()
+    try root.provide(Foo.self, Payload(bar: 1))
+    let fiber = try root.inject([Foo.self, Bar.self]) { _, _ in }
+    await settle()
+    #expect(fiber.state == .pending)
+    #expect(fiber.missingInjections == ["bar"])
+    let bar = try root.provide(Bar.self, 2)
+    try await fiber.await()
+    #expect(fiber.state == .active)
+    #expect(fiber.missingInjections == [])
+    try await bar.dispose()
+    await settle()
+    #expect(fiber.missingInjections == ["bar"])
+  }
+}
