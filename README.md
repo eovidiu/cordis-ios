@@ -50,6 +50,20 @@ try await loader.setDisabled(id: "clock", true)
 
 `swift run cordis-demo` shows the loader toggling a service and its dependent plugin.
 
+## Showcase app
+
+[`Examples/CordisShowcase`](Examples/CordisShowcase) is a SwiftUI app for iPhone and iPad (iOS 17+) built from plugins run by a `Loader`. Every card on its dashboard is a dashboard-service effect of the plugin that added it. A guided tour withdraws and restores services, updates and rejects configs, recovers a failed plugin, adds a missing service, isolates a service in a realm, and reconciles the entry tree. Other tabs list the entry tree with live fiber states, the services in each realm, and the `internal/*` event timeline.
+
+```sh
+brew install xcodegen                                  # the Xcode project is generated
+Examples/CordisShowcase/run.sh sim                     # build and launch on a simulator
+TEAM_ID=<team> DEVICE="My iPhone" Examples/CordisShowcase/run.sh device
+Examples/CordisShowcase/run.sh test                    # engine tests (swift test, macOS)
+Examples/CordisShowcase/run.sh uitest                  # XCUITest suite on a simulator
+```
+
+The engine, plugins and observable store live in the `ShowcaseKit` package next to the app. The `App` target contains only SwiftUI views.
+
 ## Differences from cordis
 
 - No `Proxy`: services are read through typed keys (`ctx[Key.self]`), which implement the paper's Algorithm 6 resolution walk. Shadows, callable services, mixins and accessors are not ported.

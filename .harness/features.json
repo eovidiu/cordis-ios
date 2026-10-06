@@ -71,6 +71,31 @@
         "Tests/CordisTests"
       ],
       "test_file": "Tests/CordisTests/DemoTests.swift"
+    },
+    {
+      "id": "F008",
+      "description": "CordisShowcase iOS demo app: SwiftUI app (simulator + device) driving a Loader over showcase plugins (services, dependency injection, effects as UI contributions, config updates, failures, events, isolation realms, groups), with a testable ShowcaseKit engine",
+      "status": "passing",
+      "scope": [
+        "Examples/CordisShowcase",
+        ".harness/init.sh",
+        "README.md",
+        ".gitignore"
+      ],
+      "test_file": "Examples/CordisShowcase/ShowcaseKit/Tests/ShowcaseKitTests/EngineTests.swift",
+      "notes": "Engine tests: swift test --package-path Examples/CordisShowcase/ShowcaseKit. UI tests: Examples/CordisShowcase/run.sh uitest (3 XCUITests, not in harness gates: ~1 min + simulator)."
+    },
+    {
+      "id": "F009",
+      "description": "C4 architecture documentation (context, container, component, code, dynamic views) and a GitHub Pages site for the project",
+      "status": "in-progress",
+      "scope": [
+        "docs",
+        ".harness/init.sh",
+        "README.md"
+      ],
+      "test_file": "docs/check.sh",
+      "assigned_to": "session-2"
     }
   ]
 }

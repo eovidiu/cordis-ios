@@ -3,6 +3,8 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
+SHOWCASE=Examples/CordisShowcase/ShowcaseKit
+
 filter_for() {
   case "$1" in
     F001) echo 'Effect|Fiber' ;;
@@ -12,15 +14,26 @@ filter_for() {
     F005) echo 'Macro' ;;
     F006) echo 'Loader' ;;
     F007) echo 'Demo' ;;
+    F008|F009) echo '' ;;
     *) echo "unknown feature: $1" >&2; exit 2 ;;
   esac
 }
 
 case "${1:-}" in
-  smoke_test) swift build --build-tests ;;
+  smoke_test)
+    swift build --build-tests
+    swift build --build-tests --package-path "$SHOWCASE" ;;
   focused_test)
-    filter="$(filter_for "${2:-}")"
-    swift test --filter "$filter" ;;
-  full_test) swift test ;;
+    feature="${2:-}"
+    filter="$(filter_for "$feature")"
+    case "$feature" in
+      F008) swift test --package-path "$SHOWCASE" ;;
+      F009) docs/check.sh ;;
+      *) swift test --filter "$filter" ;;
+    esac ;;
+  full_test)
+    swift test
+    swift test --package-path "$SHOWCASE"
+    if [ -x docs/check.sh ]; then docs/check.sh; fi ;;
   *) echo "unknown stage: ${1:-}" >&2; exit 2 ;;
 esac

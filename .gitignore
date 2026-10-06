@@ -3,3 +3,4 @@
 DerivedData/
 .harness/.test-stamp.json
 *.xcodeproj
+Examples/CordisShowcase/build/
