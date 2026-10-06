@@ -14,7 +14,10 @@ let package = Package(
   ],
   targets: [
     .macro(name: "CordisMacros", dependencies: [
+      .product(name: "SwiftSyntax", package: "swift-syntax"),
+      .product(name: "SwiftSyntaxBuilder", package: "swift-syntax"),
       .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
+      .product(name: "SwiftDiagnostics", package: "swift-syntax"),
       .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
     ]),
     .target(name: "Cordis", dependencies: ["CordisMacros"]),
@@ -23,6 +26,8 @@ let package = Package(
     .testTarget(name: "CordisMacrosTests", dependencies: [
       "CordisMacros",
       .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
+      .product(name: "SwiftSyntaxMacrosGenericTestSupport", package: "swift-syntax"),
+      .product(name: "SwiftSyntaxMacroExpansion", package: "swift-syntax"),
     ]),
   ],
   swiftLanguageModes: [.v6]
