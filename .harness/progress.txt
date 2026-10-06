@@ -1,1 +1,3 @@
 2026-10 session 1: created package skeleton and harness; implementing plan local://cordis-ios-plan.md steps 2-13.
+2026-10 session 1 (cont.): core, events, logger, macros, loader, demo implemented; 74 tests green (swift test); iOS simulator build succeeds; all features F001-F007 passing.
+Next: nothing pending from the initial plan.

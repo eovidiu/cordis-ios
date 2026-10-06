@@ -24,6 +24,10 @@ public enum FiberState: Int, Sendable, CustomStringConvertible {
 /// as the services it injects come and go. Transitions run as tasks stored
 /// in `inertia`; a transition in flight always runs to completion, and a
 /// change that arrives meanwhile is applied when it finishes.
+///
+/// Differences from cordis: unloading runs the fiber's disposers one after
+/// another (newest first) instead of concurrently, and a fiber disposed while
+/// pending or failed ends in `.disposed` instead of keeping its state.
 @CordisActor
 public final class Fiber {
   static let inactive = "__INACTIVE__"

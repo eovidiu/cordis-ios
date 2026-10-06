@@ -3,73 +3,74 @@
     {
       "id": "F001",
       "description": "Effects and fiber lifecycle (effect runner, inertia, update/restart)",
-      "status": "pending",
+      "status": "passing",
       "scope": [
         "Sources/Cordis/Core",
         "Tests/CordisTests"
       ],
-      "test_file": null
+      "test_file": "Tests/CordisTests/FiberTests.swift"
     },
     {
       "id": "F002",
       "description": "Context, registry, reflect, services, isolation, plugins",
-      "status": "pending",
+      "status": "passing",
       "scope": [
         "Sources/Cordis/Core",
         "Tests/CordisTests"
       ],
-      "test_file": null
+      "test_file": "Tests/CordisTests/PluginTests.swift"
     },
     {
       "id": "F003",
       "description": "Events service: emit/parallel/serial/bail/waterfall with scopes",
-      "status": "pending",
+      "status": "passing",
       "scope": [
         "Sources/Cordis/Events",
         "Tests/CordisTests"
       ],
-      "test_file": null
+      "test_file": "Tests/CordisTests/EventsTests.swift"
     },
     {
       "id": "F004",
       "description": "Logger service: buffer, exporters, name resolution",
-      "status": "pending",
+      "status": "passing",
       "scope": [
         "Sources/Cordis/Logger",
         "Tests/CordisTests"
       ],
-      "test_file": null
+      "test_file": "Tests/CordisTests/LoggerTests.swift"
     },
     {
       "id": "F005",
       "description": "Swift macros @Plugin/@Inject/@Service generating inject lists",
-      "status": "pending",
+      "status": "passing",
       "scope": [
         "Sources/CordisMacros",
         "Sources/Cordis/Macros",
         "Tests/CordisMacrosTests"
       ],
-      "test_file": null
+      "test_file": "Tests/CordisMacrosTests/MacroExpansionTests.swift"
     },
     {
       "id": "F006",
       "description": "Loader: persisted entries reconciled against fibers",
-      "status": "pending",
+      "status": "passing",
       "scope": [
         "Sources/Cordis/Loader",
         "Tests/CordisTests"
       ],
-      "test_file": null
+      "test_file": "Tests/CordisTests/LoaderTests.swift"
     },
     {
       "id": "F007",
       "description": "Demo executable driving the loader",
-      "status": "pending",
+      "status": "passing",
       "scope": [
         "Sources/CordisDemo",
+        "Sources/CordisDemoKit",
         "Tests/CordisTests"
       ],
-      "test_file": null
+      "test_file": "Tests/CordisTests/DemoTests.swift"
     }
   ]
 }

@@ -21,8 +21,9 @@ let package = Package(
       .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
     ]),
     .target(name: "Cordis", dependencies: ["CordisMacros"]),
-    .executableTarget(name: "CordisDemo", dependencies: ["Cordis"], resources: [.copy("entries.json")]),
-    .testTarget(name: "CordisTests", dependencies: ["Cordis"]),
+    .target(name: "CordisDemoKit", dependencies: ["Cordis"], resources: [.copy("entries.json")]),
+    .executableTarget(name: "CordisDemo", dependencies: ["CordisDemoKit"]),
+    .testTarget(name: "CordisTests", dependencies: ["Cordis", "CordisDemoKit"]),
     .testTarget(name: "CordisMacrosTests", dependencies: [
       "CordisMacros",
       .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),

@@ -150,7 +150,8 @@ extension Fiber {
   /// async generator). Disposing waits for the body; a `collect` after
   /// disposal throws `EffectAbortedError`, ending the body. If the body
   /// throws, the effect is disposed, the error is logged, and `ready()`
-  /// rethrows it.
+  /// rethrows it. A trailing closure that contains no `await` resolves to the
+  /// synchronous `effect(_:scoped:)` overload instead.
   @discardableResult
   public func effect(
     _ label: String = "anonymous",
