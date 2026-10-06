@@ -1,3 +1,5 @@
 2026-10 session 1: created package skeleton and harness; implementing plan local://cordis-ios-plan.md steps 2-13.
 2026-10 session 1 (cont.): core, events, logger, macros, loader, demo implemented; 74 tests green (swift test); iOS simulator build succeeds; all features F001-F007 passing.
 Next: nothing pending from the initial plan.
+2026-10 session 2: F008 CordisShowcase iOS app (ShowcaseKit engine + SwiftUI app + XCUITests, run.sh sim/device/test/uitest), verified on iPhone 17 Pro simulator and on the iPhone XR (iOS 18.7.9; tour step persisted in the device's entries.json). F009 docs site in docs/ (overview, concepts, C4 architecture, showcase) checked by docs/check.sh and in headless Chromium. Repo made public for GitHub Pages (main:/docs).
+Next: nothing pending.

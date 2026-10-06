@@ -88,14 +88,14 @@
     {
       "id": "F009",
       "description": "C4 architecture documentation (context, container, component, code, dynamic views) and a GitHub Pages site for the project",
-      "status": "in-progress",
+      "status": "passing",
       "scope": [
         "docs",
         ".harness/init.sh",
         "README.md"
       ],
       "test_file": "docs/check.sh",
-      "assigned_to": "session-2"
+      "notes": "Static site in docs/ (marked + mermaid from jsDelivr), served by GitHub Pages from main:/docs. docs/check.sh validates routes, links, images, anchors and C4 views; diagram rendering was checked in headless Chromium."
     }
   ]
 }

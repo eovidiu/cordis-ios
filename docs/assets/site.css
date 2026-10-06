@@ -1,0 +1,145 @@
+:root {
+  --bg: #ffffff;
+  --fg: #1d1d1f;
+  --muted: #6e6e73;
+  --line: #e5e5ea;
+  --panel: #f5f5f7;
+  --accent: #5856d6;
+  --code-bg: #f2f2f7;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111114;
+    --fg: #f2f2f7;
+    --muted: #a1a1a6;
+    --line: #2c2c31;
+    --panel: #1c1c21;
+    --accent: #8d8bff;
+    --code-bg: #1c1c21;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 16px/1.6 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 10px 24px;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--fg);
+  font-weight: 700;
+  font-size: 18px;
+  white-space: nowrap;
+}
+.brand img { border-radius: 7px; }
+
+nav.pages { display: flex; gap: 4px; flex-wrap: wrap; flex: 1; }
+nav.pages a {
+  padding: 6px 12px;
+  border-radius: 8px;
+  color: var(--muted);
+  font-weight: 500;
+}
+nav.pages a[aria-current] { color: var(--fg); background: var(--panel); }
+.repo { font-weight: 500; white-space: nowrap; }
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 240px;
+  gap: 48px;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+}
+
+main { min-width: 0; }
+main h1 { font-size: 2.2rem; line-height: 1.2; margin-top: 0; }
+main h2 { margin-top: 2.4em; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+main h3 { margin-top: 1.8em; }
+main :is(h1, h2, h3, h4) { scroll-margin-top: 72px; }
+main img { max-width: 100%; height: auto; }
+main > p > img { display: block; max-width: 320px; margin: 16px auto; border-radius: 28px; box-shadow: 0 8px 30px rgb(0 0 0 / 0.25); }
+
+code {
+  font: 0.88em/1.5 ui-monospace, "SF Mono", Menlo, monospace;
+  background: var(--code-bg);
+  padding: 0.1em 0.35em;
+  border-radius: 5px;
+}
+pre {
+  background: var(--code-bg);
+  padding: 14px 16px;
+  border-radius: 10px;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+}
+pre code { background: none; padding: 0; }
+
+table { border-collapse: collapse; width: 100%; margin: 16px 0; font-size: 0.94em; display: block; overflow-x: auto; }
+th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--muted); font-weight: 600; }
+
+.mermaid {
+  margin: 20px 0;
+  padding: 16px;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow-x: auto;
+  text-align: center;
+}
+.mermaid svg { max-width: 100%; height: auto; }
+
+.gallery {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding: 8px 2px 16px;
+  scroll-snap-type: x mandatory;
+}
+.gallery figure { margin: 0; flex: 0 0 220px; scroll-snap-align: start; text-align: center; }
+.gallery img { width: 100%; border-radius: 22px; box-shadow: 0 6px 20px rgb(0 0 0 / 0.25); }
+.gallery figcaption { margin-top: 8px; color: var(--muted); font-size: 0.9em; }
+
+#toc { position: sticky; top: 80px; align-self: start; max-height: calc(100vh - 100px); overflow-y: auto; font-size: 0.88em; }
+#toc ul { list-style: none; margin: 0; padding: 0; border-left: 1px solid var(--line); }
+#toc li a { display: block; padding: 3px 12px; color: var(--muted); }
+#toc li.h3 a { padding-left: 24px; }
+#toc li a:hover { color: var(--fg); text-decoration: none; }
+.toc-title { margin: 0 0 8px; font-weight: 600; color: var(--muted); text-transform: uppercase; font-size: 0.78em; letter-spacing: 0.06em; }
+
+.footer { border-top: 1px solid var(--line); padding: 20px 24px; color: var(--muted); font-size: 0.88em; text-align: center; }
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: minmax(0, 1fr); }
+  #toc { display: none; }
+  .topbar { position: static; flex-wrap: wrap; gap: 4px 16px; padding: 10px 16px; }
+  .repo { margin-left: auto; }
+  nav.pages { order: 3; flex: 0 0 100%; flex-wrap: nowrap; overflow-x: auto; }
+  nav.pages a { white-space: nowrap; }
+  main :is(h1, h2, h3, h4) { scroll-margin-top: 8px; }
+}
