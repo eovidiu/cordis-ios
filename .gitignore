@@ -1,0 +1,5 @@
+.build/
+.swiftpm/
+DerivedData/
+.harness/.test-stamp.json
+*.xcodeproj

@@ -1,0 +1,1 @@
+2026-10 session 1: created package skeleton and harness; implementing plan local://cordis-ios-plan.md steps 2-13.

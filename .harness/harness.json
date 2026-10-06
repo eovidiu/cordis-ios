@@ -1,0 +1,8 @@
+{
+  "project": "cordis-ios",
+  "git_identity": {
+    "user_name": "Ovidiu Eftimie",
+    "user_email": "eovidiu@gmail.com"
+  },
+  "gates": "enforce"
+}

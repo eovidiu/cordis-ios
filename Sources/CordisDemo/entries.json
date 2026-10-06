@@ -1,0 +1,1 @@
+[{"id":"clock","plugin":"clock"},{"id":"greeter","plugin":"greeter","config":{"name":"Ovidiu"}},{"id":"noisy","plugin":"noisy"}]

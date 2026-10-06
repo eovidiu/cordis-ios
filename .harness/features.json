@@ -1,0 +1,75 @@
+{
+  "features": [
+    {
+      "id": "F001",
+      "description": "Effects and fiber lifecycle (effect runner, inertia, update/restart)",
+      "status": "pending",
+      "scope": [
+        "Sources/Cordis/Core",
+        "Tests/CordisTests"
+      ],
+      "test_file": null
+    },
+    {
+      "id": "F002",
+      "description": "Context, registry, reflect, services, isolation, plugins",
+      "status": "pending",
+      "scope": [
+        "Sources/Cordis/Core",
+        "Tests/CordisTests"
+      ],
+      "test_file": null
+    },
+    {
+      "id": "F003",
+      "description": "Events service: emit/parallel/serial/bail/waterfall with scopes",
+      "status": "pending",
+      "scope": [
+        "Sources/Cordis/Events",
+        "Tests/CordisTests"
+      ],
+      "test_file": null
+    },
+    {
+      "id": "F004",
+      "description": "Logger service: buffer, exporters, name resolution",
+      "status": "pending",
+      "scope": [
+        "Sources/Cordis/Logger",
+        "Tests/CordisTests"
+      ],
+      "test_file": null
+    },
+    {
+      "id": "F005",
+      "description": "Swift macros @Plugin/@Inject/@Service generating inject lists",
+      "status": "pending",
+      "scope": [
+        "Sources/CordisMacros",
+        "Sources/Cordis/Macros",
+        "Tests/CordisMacrosTests"
+      ],
+      "test_file": null
+    },
+    {
+      "id": "F006",
+      "description": "Loader: persisted entries reconciled against fibers",
+      "status": "pending",
+      "scope": [
+        "Sources/Cordis/Loader",
+        "Tests/CordisTests"
+      ],
+      "test_file": null
+    },
+    {
+      "id": "F007",
+      "description": "Demo executable driving the loader",
+      "status": "pending",
+      "scope": [
+        "Sources/CordisDemo",
+        "Tests/CordisTests"
+      ],
+      "test_file": null
+    }
+  ]
+}
