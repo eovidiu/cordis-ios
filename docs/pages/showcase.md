@@ -1,6 +1,8 @@
 # Showcase app
 
-**CordisShowcase** is a SwiftUI app for iPhone and iPad (iOS 17+). Everything it displays comes from plugins that a cordis `Loader` runs. Its source is in [`Examples/CordisShowcase`](https://github.com/eovidiu/cordis-ios/tree/main/Examples/CordisShowcase).
+**Cordis Showcase** is a SwiftUI app for iPhone (iOS 17+). Everything it displays comes from plugins that a cordis `Loader` runs. Its source is in [`Examples/CordisShowcase`](https://github.com/eovidiu/cordis-ios/tree/main/Examples/CordisShowcase).
+
+The **About** screen (the ⓘ button on the Tour tab, or the Credits card at the end of the tour) credits the original cordis team (Shigma and the cordiverse contributors). It also cites the paper *A Programming Paradigm for Spatiotemporal Composability* (Shi, Zhang and Cui, [arXiv:2608.25512](https://arxiv.org/abs/2608.25512)), links to this Swift port on GitHub, and includes the MIT notices of both projects. The app collects no data; see the [privacy policy](privacy.md).
 
 <div class="gallery">
   <figure><img src="../assets/screenshots/tour.png" alt="Tour tab with step 1, Withdraw a service"><figcaption>Tour</figcaption></figure>
@@ -83,14 +85,28 @@ Launch arguments, accepted by both `sim` and `device`:
 
 To open the project in Xcode, run `xcodegen generate` in `Examples/CordisShowcase`, open `CordisShowcase.xcodeproj`, choose your team under *Signing & Capabilities*, and run. If Xcode asks whether to trust the `CordisMacros` macro, allow it. The command-line builds in `run.sh` pass `-skipMacroValidation` for the same reason.
 
+## Release to the App Store
+
+The release is prepared in [`Examples/CordisShowcase/AppStore`](https://github.com/eovidiu/cordis-ios/tree/main/Examples/CordisShowcase/AppStore):
+
+| File | Contents |
+| --- | --- |
+| `metadata.md` | Every App Store Connect field: name, subtitle, description, keywords, URLs, category, age rating, review notes, privacy answers |
+| `screenshots/` | Six 6.9-inch iPhone screenshots (1320 × 2868), produced by `screenshots.sh` |
+| `check.sh` | Checks field lengths against App Store limits, and screenshot sizes and alpha |
+| `RELEASE.md` | The release checklist, including the steps that need your Apple account |
+
+`TEAM_ID=<team> run.sh archive` builds a signed Release archive and exports it for App Store Connect. `run.sh archive upload` uploads it.
+
 ## How the code is split
 
 ```
 Examples/CordisShowcase/
-├── project.yml          XcodeGen spec (app + UI test targets)
-├── run.sh               build / install / launch / test
-├── App/                 SwiftUI views only
-├── UITests/             XCUITests: tour, config editing, toggles
+├── project.yml          XcodeGen spec (app + UI test targets, release settings)
+├── run.sh               build / install / launch / test / archive
+├── App/                 SwiftUI views, About screen, privacy manifest
+├── UITests/             XCUITests: tour, config editing, toggles, credits
+├── AppStore/            store metadata, screenshots, release checklist
 └── ShowcaseKit/         Swift package, testable on macOS
     ├── Sources/ShowcaseKit/
     │   ├── Plugins.swift     services and plugins

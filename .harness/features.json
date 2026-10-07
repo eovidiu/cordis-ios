@@ -96,6 +96,20 @@
       ],
       "test_file": "docs/check.sh",
       "notes": "Static site in docs/ (marked + mermaid from jsDelivr), served by GitHub Pages from main:/docs. docs/check.sh validates routes, links, images, anchors and C4 views; diagram rendering was checked in headless Chromium."
+    },
+    {
+      "id": "F010",
+      "description": "App Store release prep for the showcase app: display name Cordis Showcase, in-app About screen crediting the cordis team, citing the paper and linking the Swift port, release build settings (iPhone, privacy manifest, export compliance), signed Release archive, store metadata, privacy policy and screenshots",
+      "status": "passing",
+      "scope": [
+        "Examples/CordisShowcase",
+        "docs",
+        ".harness/init.sh",
+        "README.md",
+        ".gitignore"
+      ],
+      "test_file": "Examples/CordisShowcase/UITests/ShowcaseUITests.swift",
+      "notes": "Signed Release archive verified (Info.plist, privacy manifest, icon). App Store export/upload needs an Apple ID in Xcode or an ASC API key (exportArchive: No Accounts) plus the App Store Connect app record: see Examples/CordisShowcase/AppStore/RELEASE.md."
     }
   ]
 }

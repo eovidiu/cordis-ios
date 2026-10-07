@@ -6,12 +6,13 @@
 import { marked } from "https://cdn.jsdelivr.net/npm/marked@15.0.12/lib/marked.esm.js";
 import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs";
 
-const PAGES = ["home", "concepts", "architecture", "showcase"];
+const PAGES = ["home", "concepts", "architecture", "showcase", "privacy"];
 const TITLES = {
   home: "Overview",
   concepts: "Concepts",
   architecture: "Architecture (C4)",
   showcase: "Showcase app",
+  privacy: "Privacy",
 };
 const content = document.getElementById("content");
 const toc = document.getElementById("toc");

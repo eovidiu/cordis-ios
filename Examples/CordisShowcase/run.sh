@@ -5,15 +5,20 @@
 #   ./run.sh device [app args…]     build, install and launch on a connected iPhone
 #   ./run.sh test                   run the ShowcaseKit tests (macOS, swift test)
 #   ./run.sh uitest                 run the XCUITest suite on a simulator
+#   ./run.sh archive                Release archive + App Store Connect export (build/release/)
+#   ./run.sh archive upload         same, then upload the build to App Store Connect
 #
 # Environment:
 #   SIMULATOR   simulator name or UDID        (default: first available iPhone)
 #   DEVICE      device name or identifier     (default: first connected iPhone)
-#   TEAM_ID     Apple development team for device signing (required for `device`)
+#   TEAM_ID     Apple development team for signing (required for `device` and `archive`)
+#   ASC_KEY_PATH, ASC_KEY_ID, ASC_ISSUER_ID
+#               App Store Connect API key for `archive` when no Apple ID is
+#               signed in to Xcode (Settings > Accounts)
 #
 # App arguments: `-resetEntries YES` starts from the default entries,
 # `-tourSteps N` runs the first N tour steps, `-tab dashboard|plugins|…`
-# selects the initial tab.
+# selects the initial tab, `-showAbout YES` opens the credits.
 set -euo pipefail
 cd "$(dirname "$0")"
 
@@ -96,8 +101,45 @@ case "${1:-}" in
       -destination "platform=iOS Simulator,id=$sim" \
       -derivedDataPath "$DERIVED" -skipMacroValidation -quiet test
     ;;
+  archive)
+    : "${TEAM_ID:?set TEAM_ID to your Apple development team id}"
+    destination=export
+    [ "${2:-}" = upload ] && destination=upload
+    generate
+    rm -rf build/release
+    mkdir -p build/release
+    xcodebuild -project CordisShowcase.xcodeproj -scheme CordisShowcase -configuration Release \
+      -destination 'generic/platform=iOS' -archivePath build/release/CordisShowcase.xcarchive \
+      -skipMacroValidation -allowProvisioningUpdates DEVELOPMENT_TEAM="$TEAM_ID" -quiet archive
+    cat > build/release/ExportOptions.plist <<PLIST
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>method</key><string>app-store-connect</string>
+  <key>destination</key><string>$destination</string>
+  <key>teamID</key><string>$TEAM_ID</string>
+  <key>signingStyle</key><string>automatic</string>
+  <key>uploadSymbols</key><true/>
+  <key>manageAppVersionAndBuildNumber</key><false/>
+</dict>
+</plist>
+PLIST
+    # Exporting for App Store Connect creates a distribution certificate and
+    # profile, which needs an Apple ID in Xcode > Settings > Accounts or an
+    # App Store Connect API key (ASC_KEY_PATH, ASC_KEY_ID, ASC_ISSUER_ID).
+    auth=()
+    if [ -n "${ASC_KEY_PATH:-}" ]; then
+      auth=(-authenticationKeyPath "$ASC_KEY_PATH" -authenticationKeyID "${ASC_KEY_ID:?}" \
+        -authenticationKeyIssuerID "${ASC_ISSUER_ID:?}")
+    fi
+    xcodebuild -exportArchive -archivePath build/release/CordisShowcase.xcarchive \
+      -exportPath build/release/export -exportOptionsPlist build/release/ExportOptions.plist \
+      -allowProvisioningUpdates ${auth[@]+"${auth[@]}"}
+    ls build/release/export
+    ;;
   *)
-    sed -n '2,17p' "$0" | sed 's/^# \{0,1\}//'
+    sed -n '2,21p' "$(basename "$0")" | sed 's/^# \{0,1\}//'
     exit 2
     ;;
 esac

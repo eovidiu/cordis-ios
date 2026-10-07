@@ -1,7 +1,7 @@
 # Context Summary
 
 ## Active Context
-- Working on: nothing (showcase app F008 and docs/Pages F009 complete)
+- Working on: nothing (F010 App Store prep done; export/upload waits on Apple account sign-in or ASC API key + app record)
 - Blocked by: nothing
 - Next: new features as requested
 
@@ -28,6 +28,8 @@
 - Docs: static site in docs/ (no Jekyll, .nojekyll), Markdown pages rendered client-side with marked + Mermaid pinned on jsDelivr; same Markdown reads on GitHub. Mermaid always uses the default theme (C4 labels unreadable in dark) (2026-10)
 - GitHub Pages needed the repo public (plan refused Pages on private repo, HTTP 422); user chose to make cordis-ios public (2026-10)
 
+- Showcase ships as "Cordis Showcase", iPhone-only (TARGETED_DEVICE_FAMILY 1) until an iPad layout is tested; credits live in App/AboutView.swift; store material in Examples/CordisShowcase/AppStore (metadata.md, check.sh, screenshots.sh, RELEASE.md) (2026-10)
+
 ## Gotchas
 - Fiber holds its ctx strongly only while live; on disposal it switches to weak and `fiber.ctx` rebuilds an equivalent context if needed (breaks the Fiber<->Context leak; FiberLeakTests). Tests using static weak probes must not share a probe type across parallel tests
 - A trailing closure without `await` passed to `ctx.effect { }` selects the sync `scoped:` overload; JS "async" effects without awaits must `await Task.yield()` to get async semantics
@@ -40,6 +42,10 @@
 - XCUITest on iOS 26: a SwiftUI Toggle is a Switch nested in a Switch; tap the inner one. The keyboard covers the tab bar, so dismiss focus before switching tabs
 - Two Buttons in one Form row need `.buttonStyle(.borderless)` or one tap fires both
 - xcodebuild against a local package with macros needs `-skipMacroValidation`
+
+- `xcodebuild -exportArchive` for app-store-connect fails with "No Accounts" when no Apple ID is in Xcode: archive works with the local dev cert, export needs an account or -authenticationKey* flags
+- The vv-harness scope gate treats bare words like `17` in `"iPhone 17 Pro"` as paths: pass simulator UDIDs
+- SwiftUI `Link` is exposed to XCUITest as a button, and `.accessibilityElement(children: .combine)` as a generic element: match on labels via descendants(matching: .any)
 
 ## Conventions
 - Suite names start with the prefixes used by .harness/init.sh focused_test filters

@@ -3,3 +3,5 @@
 Next: nothing pending from the initial plan.
 2026-10 session 2: F008 CordisShowcase iOS app (ShowcaseKit engine + SwiftUI app + XCUITests, run.sh sim/device/test/uitest), verified on iPhone 17 Pro simulator and on the iPhone XR (iOS 18.7.9; tour step persisted in the device's entries.json). F009 docs site in docs/ (overview, concepts, C4 architecture, showcase) checked by docs/check.sh and in headless Chromium. Repo made public for GitHub Pages (main:/docs).
 Next: nothing pending.
+2026-10 session 3: F010 App Store prep: display name Cordis Showcase, About/credits screen (cordis team, paper, Swift repo, MIT notices) with UI test, iPhone-only release settings, privacy manifest, export compliance, run.sh archive (+ASC API key), AppStore/ metadata + 6.9in screenshots + check.sh + RELEASE.md, privacy policy page on the docs site. Release archive verified; export blocked on Apple account sign-in (No Accounts).
+Next: user signs in to Xcode (or provides ASC API key) and creates the App Store Connect record, then run.sh archive upload.

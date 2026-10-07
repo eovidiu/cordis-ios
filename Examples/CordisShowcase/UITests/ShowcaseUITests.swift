@@ -63,4 +63,35 @@ final class ShowcaseUITests: XCTestCase {
     openTab("Dashboard")
     XCTAssertTrue(app.staticTexts["Counter"].waitForNonExistence(timeout: 10))
   }
+
+  func testAboutCreditsTheCordisTeamCitesThePaperAndLinksTheSwiftPort() {
+    openTab("Tour")
+    app.navigationBars.buttons["About"].tap()
+    let about = app.navigationBars["About"]
+    XCTAssertTrue(about.waitForExistence(timeout: 5))
+
+    // SwiftUI exposes a Link as a button and a combined text block as a
+    // generic element, so match on labels rather than element types.
+    func element(_ predicate: String) -> XCUIElement {
+      app.descendants(matching: .any).matching(NSPredicate(format: predicate)).firstMatch
+    }
+    XCTAssertTrue(element("label == 'cordiverse/cordis on GitHub'").waitForExistence(timeout: 5))
+    XCTAssertTrue(element("label CONTAINS 'Shigma'").exists)
+    for predicate in [
+      "label CONTAINS 'Spatiotemporal Composability' AND label CONTAINS 'Yifan Shi'",
+      "label == 'Read the paper on arXiv'",
+      "label == 'eovidiu/cordis-ios on GitHub'",
+    ] {
+      let target = element(predicate)
+      var swipes = 0
+      while !(target.exists && target.isHittable) && swipes < 4 {
+        app.swipeUp()
+        swipes += 1
+      }
+      XCTAssertTrue(target.isHittable, predicate)
+    }
+
+    about.buttons["Done"].tap()
+    XCTAssertTrue(about.waitForNonExistence(timeout: 5))
+  }
 }

@@ -9,6 +9,8 @@ struct TourView: View {
   @Binding var tab: AppTab
   @State private var completed: Set<Int> = []
   @State private var running: Int?
+  /// `-showAbout YES` opens the credits at launch (screenshots, UI tests).
+  @State private var showingAbout = UserDefaults.standard.bool(forKey: "showAbout")
 
   var body: some View {
     NavigationStack {
@@ -25,6 +27,7 @@ struct TourView: View {
               showDashboard: { tab = .dashboard }
             )
           }
+          credits
         }
         .padding()
       }
@@ -32,12 +35,16 @@ struct TourView: View {
       .navigationTitle("Cordis Tour")
       .toolbar {
         ToolbarItem(placement: .topBarTrailing) { BusyIndicator() }
+        ToolbarItem(placement: .topBarTrailing) {
+          Button("About", systemImage: "info.circle") { showingAbout = true }
+        }
         ToolbarItem(placement: .topBarLeading) {
           if !completed.isEmpty {
             Button("Restart tour") { completed = [] }
           }
         }
       }
+      .sheet(isPresented: $showingAbout) { AboutView() }
     }
   }
 
@@ -57,6 +64,28 @@ struct TourView: View {
         .foregroundStyle(.secondary)
     }
     .padding(.bottom, 4)
+  }
+
+  private var credits: some View {
+    Button { showingAbout = true } label: {
+      HStack(spacing: 12) {
+        Image(systemName: "heart.text.square")
+          .font(.title2)
+        VStack(alignment: .leading, spacing: 2) {
+          Text("Credits").font(.headline)
+          Text("cordis by Shigma and the cordiverse contributors, the paper behind it, and the Swift port on GitHub.")
+            .font(.caption)
+            .foregroundStyle(.secondary)
+            .multilineTextAlignment(.leading)
+        }
+        Spacer()
+        Image(systemName: "chevron.right").foregroundStyle(.tertiary)
+      }
+      .padding()
+      .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16))
+    }
+    .buttonStyle(.plain)
+    .accessibilityLabel("Credits")
   }
 
   private func run(_ step: TourStep) {

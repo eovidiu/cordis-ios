@@ -14,7 +14,7 @@ filter_for() {
     F005) echo 'Macro' ;;
     F006) echo 'Loader' ;;
     F007) echo 'Demo' ;;
-    F008|F009) echo '' ;;
+    F008|F009|F010) echo '' ;;
     *) echo "unknown feature: $1" >&2; exit 2 ;;
   esac
 }
@@ -35,11 +35,18 @@ case "${1:-}" in
           -destination 'generic/platform=iOS Simulator' -derivedDataPath build/DerivedData \
           -skipMacroValidation -quiet build) ;;
       F009) docs/check.sh ;;
+      F010)
+        # release prep: store metadata and screenshots, docs (privacy page),
+        # and the About screen's UI test on a simulator
+        Examples/CordisShowcase/AppStore/check.sh
+        docs/check.sh
+        Examples/CordisShowcase/run.sh uitest ;;
       *) swift test --filter "$filter" ;;
     esac ;;
   full_test)
     swift test
     swift test --package-path "$SHOWCASE"
-    if [ -x docs/check.sh ]; then docs/check.sh; fi ;;
+    if [ -x docs/check.sh ]; then docs/check.sh; fi
+    Examples/CordisShowcase/AppStore/check.sh ;;
   *) echo "unknown stage: ${1:-}" >&2; exit 2 ;;
 esac
