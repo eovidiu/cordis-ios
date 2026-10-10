@@ -4,6 +4,8 @@ A native Swift (iOS 17+/macOS 14+) port of the [cordis](https://github.com/cordi
 
 **Documentation:** <https://eovidiu.github.io/cordis-ios/> covers concepts, the C4 architecture model (context, containers, components, code, dynamic and deployment views) and the showcase app. The site's sources are in [`docs/`](docs). Run `docs/check.sh` after editing them.
 
+**Specs:** feature specifications are in [`docs/specs/`](docs/specs). [0001](docs/specs/0001-per-user-plugins.md) covers per-user plugin activation from a server admin interface.
+
 ## Usage
 
 ```swift
