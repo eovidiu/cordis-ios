@@ -110,6 +110,20 @@
       ],
       "test_file": "Examples/CordisShowcase/UITests/ShowcaseUITests.swift",
       "notes": "Signed Release archive verified (Info.plist, privacy manifest, icon). App Store export/upload needs an Apple ID in Xcode or an ASC API key (exportArchive: No Accounts) plus the App Store Connect app record: see Examples/CordisShowcase/AppStore/RELEASE.md."
+    },
+    {
+      "id": "F011",
+      "description": "Per-user plugin activation from a server admin interface, as specified in docs/specs/0001-per-user-plugins.md: cordis-ios library changes (R-L1 to R-L5) and the CordisRemote target (sections 6.2 to 6.6) with acceptance tests 1-18",
+      "status": "pending",
+      "scope": [
+        "Sources/Cordis",
+        "Sources/CordisRemote",
+        "Tests",
+        "Package.swift",
+        "docs"
+      ],
+      "spec": "docs/specs/0001-per-user-plugins.md",
+      "notes": "Server (tests 19-28), admin UI and Epic Drives integration live outside this repo; tracked in Linear (Epic Drives project)."
     }
   ]
 }
