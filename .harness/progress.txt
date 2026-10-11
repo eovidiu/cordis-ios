@@ -11,3 +11,5 @@ Next: F011 (spec 0001 library + CordisRemote); App Store upload still waits on A
 Next: user approves, then submit for review.
 2026-10 session 6: F014 author section on the landing page (Substack, The Agent Field Guide, LinkedIn) and README screenshot gallery of the redesigned app (docs/assets/app); docs/check.sh checks README images. Note: docs/assets/screenshots (landing showcase, concepts page) still show the pre-redesign UI.
 Next: F011 (spec 0001); App Store submission on user go-ahead.
+2026-10-11: Cordis Showcase 1.0 (build 2) submitted for App Review (submission 57dd3883, 12:52 UTC), state WAITING_FOR_REVIEW, release AFTER_APPROVAL.
+Next: watch for Apple review result; F011.
