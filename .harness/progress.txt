@@ -9,3 +9,5 @@ Next: user signs in to Xcode (or provides ASC API key) and creates the App Store
 Next: F011 (spec 0001 library + CordisRemote); App Store upload still waits on Apple account sign-in.
 2026-10 session 5: F013 pre-submission review: Loader race fixed (concurrent mutations orphaned fibers), services log what they do, catalog-sheet alerts, fuzz/concurrency/per-plugin tests, XCUITest over all 11 catalog plugins; app restyled to the website design; build 1.0 (2) uploaded and attached, screenshots replaced.
 Next: user approves, then submit for review.
+2026-10 session 6: F014 author section on the landing page (Substack, The Agent Field Guide, LinkedIn) and README screenshot gallery of the redesigned app (docs/assets/app); docs/check.sh checks README images. Note: docs/assets/screenshots (landing showcase, concepts page) still show the pre-redesign UI.
+Next: F011 (spec 0001); App Store submission on user go-ahead.

@@ -151,6 +151,19 @@
       ],
       "test_file": "Examples/CordisShowcase/ShowcaseKit/Tests/ShowcaseKitTests/PluginReviewTests.swift",
       "notes": "Scope includes xd:/mcp__mobbin_search_screens: the gate treats MCP tool-device writes (Mobbin design references for the redesign) as file paths."
+    },
+    {
+      "id": "F014",
+      "description": "Author section on the website (Substack, The Agent Field Guide, LinkedIn) and screenshots of the current Cordis Showcase app in the README",
+      "status": "passing",
+      "scope": [
+        "docs",
+        "README.md",
+        ".harness/init.sh",
+        ".harness/features.json"
+      ],
+      "test_file": "docs/check.sh",
+      "notes": "Landing page #author section (Substack, The Agent Field Guide, LinkedIn) + footer link; README gallery of six current-app screenshots in docs/assets/app (552x1200 JPEG from AppStore/screenshots); docs/check.sh fails on missing README images."
     }
   ]
 }

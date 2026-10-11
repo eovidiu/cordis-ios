@@ -58,6 +58,29 @@ try await loader.setDisabled(id: "clock", true)
 
 [`Examples/CordisShowcase`](Examples/CordisShowcase) is **Cordis Showcase**, a SwiftUI app for iPhone (iOS 17+) built from plugins run by a `Loader`. Every card on its dashboard is a dashboard-service effect of the plugin that added it. A guided tour withdraws and restores services, updates and rejects configs, recovers a failed plugin, adds a missing service, isolates a service in a realm, and reconciles the entry tree. Other tabs list the entry tree with live fiber states, the services in each realm, and the `internal/*` event timeline. Its About screen credits the cordis authors, cites the paper and links to this repository.
 
+<table>
+  <tr>
+    <td><img src="docs/assets/app/01-tour.jpg" alt="Tour: the guided tour of plugin lifecycle steps" width="260"></td>
+    <td><img src="docs/assets/app/02-dashboard.jpg" alt="Dashboard: cards, each contributed by a running plugin" width="260"></td>
+    <td><img src="docs/assets/app/03-plugins.jpg" alt="Plugins: the persisted entry tree with each fiber's live state" width="260"></td>
+  </tr>
+  <tr>
+    <td align="center">Tour</td>
+    <td align="center">Dashboard</td>
+    <td align="center">Plugins</td>
+  </tr>
+  <tr>
+    <td><img src="docs/assets/app/04-services.jpg" alt="Services: who provides and who consumes each service, by realm" width="260"></td>
+    <td><img src="docs/assets/app/05-timeline.jpg" alt="Timeline: internal status, plugin and service events plus logs" width="260"></td>
+    <td><img src="docs/assets/app/06-about.jpg" alt="About: credits for the cordis authors, the paper and this port" width="260"></td>
+  </tr>
+  <tr>
+    <td align="center">Services</td>
+    <td align="center">Timeline</td>
+    <td align="center">About</td>
+  </tr>
+</table>
+
 ```sh
 brew install xcodegen                                  # the Xcode project is generated
 Examples/CordisShowcase/run.sh sim                     # build and launch on a simulator

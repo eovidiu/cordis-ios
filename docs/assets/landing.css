@@ -221,6 +221,9 @@ blockquote footer { margin-top: 12px; color: var(--muted); font-size: 15px; }
 .hljs-meta, .hljs-attribute, .hljs-keyword.hljs-attribute { color: #fd8f3f; }
 .hljs-params, .hljs-variable { color: #d0d0d5; }
 pre code { color: #dfdfe6; }
+.docs-grid.three { grid-template-columns: repeat(3, 1fr); }
+.author h2 { margin-bottom: 8px; }
+.author .docs-grid { margin-top: 28px; }
 
 @media (max-width: 960px) {
   .grid { grid-template-columns: repeat(2, 1fr); }
@@ -237,7 +240,7 @@ pre code { color: #dfdfe6; }
   .hero { padding-top: 64px; }
   h1 br { display: none; }
   .lede { font-size: 17px; }
-  .grid, .docs-grid { grid-template-columns: 1fr; }
+  .grid, .docs-grid, .docs-grid.three { grid-template-columns: 1fr; }
   .section { padding: 80px 0; }
   .editor-code, .code { font-size: 12px; }
   .install code, .editor code, .code code { font-size: 12px; }

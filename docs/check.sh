@@ -112,6 +112,14 @@ static = re.search(r"<main>(.*)</main>", static, flags=re.S).group(1)
 if words(static) != words((pages_dir / "privacy.md").read_text()):
     problems.append("privacy.html differs from pages/privacy.md")
 
+# README images render on GitHub only if the files exist in the repo.
+repo = docs.resolve().parent
+readme = (repo / "README.md").read_text()
+readme_images = re.findall(r'<img[^>]*src="([^"]+)"', readme) + re.findall(r"!\[[^\]]*\]\(([^)\s]+)\)", readme)
+for src in readme_images:
+    if not src.startswith("http") and not (repo / src).exists():
+        problems.append(f"README.md: missing image {src}")
+
 for problem in problems:
     print(f"docs/check.sh: {problem}", file=sys.stderr)
 if problems:
