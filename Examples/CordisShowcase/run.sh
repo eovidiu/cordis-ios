@@ -136,7 +136,8 @@ PLIST
     xcodebuild -exportArchive -archivePath build/release/CordisShowcase.xcarchive \
       -exportPath build/release/export -exportOptionsPlist build/release/ExportOptions.plist \
       -allowProvisioningUpdates ${auth[@]+"${auth[@]}"}
-    ls build/release/export
+    # an upload leaves no local .ipa; only a local export has files to list
+    if [ "$destination" = export ]; then ls build/release/export; fi
     ;;
   *)
     sed -n '2,21p' "$(basename "$0")" | sed 's/^# \{0,1\}//'
