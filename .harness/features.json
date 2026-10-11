@@ -123,6 +123,19 @@
         "docs"
       ],
       "notes": "Spec: docs/specs/0001-per-user-plugins.md. Linear OVI-204 (Epic drives). Server (tests 19-29), admin UI and Epic Drives integration live outside this repo."
+    },
+    {
+      "id": "F012",
+      "description": "Launch-ready website redesign for iOS engineers: static landing page (hero with SwiftPM install, Swift code, feature grid, how-it-works, lifecycle, showcase in device frames, credits), docs app restyled with Swift syntax highlighting, legacy #/ routes preserved, social/SEO metadata, 404, sitemap; checked by docs/check.sh",
+      "status": "passing",
+      "scope": [
+        "docs",
+        "README.md",
+        "Examples/CordisShowcase/AppStore",
+        ".harness/init.sh"
+      ],
+      "test_file": "docs/check.sh",
+      "notes": "Landing at docs/index.html (static; highlight.js as progressive enhancement); docs app moved to docs/docs.html; index.html forwards legacy #/ routes. Mobbin references: install hero, editor window, feature card grid, alternating code steps, three-phone showcase."
     }
   ]
 }

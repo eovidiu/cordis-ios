@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://eovidiu.github.io/cordis-ios/sitemap.xml

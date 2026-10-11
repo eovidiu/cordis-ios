@@ -2,7 +2,7 @@
 
 A native Swift (iOS 17+/macOS 14+) port of the [cordis](https://github.com/cordiverse/cordis) meta-framework core and loader (commit `f8ea3cd`, `cordis@4.0.0-rc.10`; paper [arXiv 2608.25512](https://arxiv.org/abs/2608.25512)). Apps are built from plugins that can be switched on and off at runtime: removing a plugin reverts every effect it installed, and a plugin runs only while every service it declares is provided.
 
-**Documentation:** <https://eovidiu.github.io/cordis-ios/> covers concepts, the C4 architecture model (context, containers, components, code, dynamic and deployment views) and the showcase app. The site's sources are in [`docs/`](docs). Run `docs/check.sh` after editing them.
+**Website:** <https://eovidiu.github.io/cordis-ios/>. The [docs](https://eovidiu.github.io/cordis-ios/docs.html#/home) cover concepts, the C4 architecture model (context, containers, components, code, dynamic and deployment views) and the showcase app. The site's sources are in [`docs/`](docs): a static landing page (`index.html`) and a Markdown docs app (`docs.html`). Run `docs/check.sh` after editing them.
 
 **Specs:** feature specifications are in [`docs/specs/`](docs/specs). [0001](docs/specs/0001-per-user-plugins.md) covers per-user plugin activation from a server admin interface.
 

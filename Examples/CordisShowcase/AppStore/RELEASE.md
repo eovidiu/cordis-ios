@@ -14,7 +14,7 @@ Status of the prepared items for version 1.0 (build 1). Steps marked **you** nee
 | About screen: credits to Shigma and the cordiverse contributors, the paper citation, links to cordiverse/cordis, arXiv and eovidiu/cordis-ios, MIT notices | `App/AboutView.swift` | UI test `testAboutCreditsTheCordisTeamCitesThePaperAndLinksTheSwiftPort` |
 | Store text, URLs, age rating, review notes, privacy answers | `metadata.md` | `check.sh` (App Store field limits) |
 | Six 6.9-inch screenshots, 1320 × 2868, no alpha | `screenshots/` (`screenshots.sh`) | `check.sh` |
-| Privacy policy | https://eovidiu.github.io/cordis-ios/#/privacy | `docs/check.sh`, live site |
+| Privacy policy | https://eovidiu.github.io/cordis-ios/docs.html#/privacy | `docs/check.sh`, live site |
 | Signed Release archive | `../run.sh archive` | archive succeeded, signed with team HV325Z3W39 |
 
 ## Remaining steps

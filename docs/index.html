@@ -2,37 +2,292 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>cordis-ios</title>
-  <meta name="description" content="cordis-ios: a native Swift port of the cordis plugin framework, with C4 architecture docs and an iOS showcase app.">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>cordis-ios: plugins that clean up after themselves, in Swift</title>
+  <meta name="description" content="cordis-ios is a Swift 6 port of the cordis plugin framework. Plugins declare the services they need, load when those services appear, and revert every effect when they stop. iOS 17+, macOS 14+, MIT.">
+  <link rel="canonical" href="https://eovidiu.github.io/cordis-ios/">
+  <meta name="theme-color" content="#0b0b0f">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="cordis-ios">
+  <meta property="og:title" content="cordis-ios: plugins that clean up after themselves">
+  <meta property="og:description" content="A Swift 6 plugin framework for iOS and macOS: revertible effects, reactive dependency injection, isolated realms and a persisted loader.">
+  <meta property="og:url" content="https://eovidiu.github.io/cordis-ios/">
+  <meta property="og:image" content="https://eovidiu.github.io/cordis-ios/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="cordis-ios: plugins that clean up after themselves, in Swift">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="assets/icon.png">
-  <link rel="stylesheet" href="assets/site.css">
+  <link rel="apple-touch-icon" href="assets/icon.png">
+  <link rel="stylesheet" href="assets/landing.css">
+  <script>
+    // Links from before the redesign point at #/<page> on this URL; the docs moved to docs.html.
+    if (location.hash.startsWith("#/")) location.replace("docs.html" + location.hash);
+  </script>
 </head>
 <body>
-  <header class="topbar">
-    <a class="brand" href="#/home"><img src="assets/icon.png" alt="" width="28" height="28"> cordis-ios</a>
-    <nav class="pages" aria-label="Pages">
-      <a href="#/home" data-page="home">Overview</a>
-      <a href="#/concepts" data-page="concepts">Concepts</a>
-      <a href="#/architecture" data-page="architecture">Architecture (C4)</a>
-      <a href="#/showcase" data-page="showcase">Showcase app</a>
-      <a href="#/privacy" data-page="privacy">Privacy</a>
-    </nav>
-    <a class="repo" href="https://github.com/eovidiu/cordis-ios">GitHub</a>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="./"><img src="assets/icon.png" alt="" width="26" height="26"> cordis-ios</a>
+      <nav aria-label="Primary">
+        <a href="#features">Features</a>
+        <a href="#how">How it works</a>
+        <a href="#showcase">Showcase</a>
+        <a href="docs.html#/home">Docs</a>
+      </nav>
+      <a class="btn btn-ghost btn-sm" href="https://github.com/eovidiu/cordis-ios">
+        <svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
   </header>
-  <div class="layout">
-    <main id="content" aria-live="polite">
-      <noscript>
-        This site renders Markdown with JavaScript. Without it, read the pages on GitHub:
-        <a href="https://github.com/eovidiu/cordis-ios/tree/main/docs/pages">docs/pages</a>.
-      </noscript>
-    </main>
-    <aside id="toc" aria-label="On this page"></aside>
-  </div>
-  <footer class="footer">
-    MIT licensed. Port of <a href="https://github.com/cordiverse/cordis">cordiverse/cordis</a>.
-    Sources of these pages: <a href="https://github.com/eovidiu/cordis-ios/tree/main/docs">docs/</a>.
+
+  <main id="main">
+    <section class="hero">
+      <div class="glow" aria-hidden="true"></div>
+      <div class="wrap hero-inner">
+        <p class="eyebrow"><span class="dot" aria-hidden="true"></span> Swift 6 · iOS 17+ · macOS 14+ · MIT</p>
+        <h1>Plugins that clean up<br>after themselves.</h1>
+        <p class="lede">cordis-ios is a native Swift port of the <a href="https://github.com/cordiverse/cordis">cordis</a> plugin framework. Plugins declare the services they need, load when those services appear, and revert every effect when they stop. No teardown code, no dangling observers.</p>
+
+        <div class="install" data-tabs>
+          <div class="install-bar">
+            <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
+            <div class="tabs" role="tablist" aria-label="Install">
+              <button role="tab" aria-selected="true" aria-controls="tab-spm" id="t-spm">Package.swift</button>
+              <button role="tab" aria-selected="false" aria-controls="tab-xcode" id="t-xcode" tabindex="-1">Xcode</button>
+            </div>
+            <button class="copy" data-copy-from="[role=tabpanel]:not([hidden]) code" aria-label="Copy install snippet">Copy</button>
+          </div>
+          <div role="tabpanel" id="tab-spm" aria-labelledby="t-spm">
+            <pre><code class="language-swift">.package(url: "https://github.com/eovidiu/cordis-ios.git", from: "0.1.0")</code></pre>
+          </div>
+          <div role="tabpanel" id="tab-xcode" aria-labelledby="t-xcode" hidden>
+            <pre><code class="language-plaintext">File ▸ Add Package Dependencies… ▸ https://github.com/eovidiu/cordis-ios.git</code></pre>
+          </div>
+        </div>
+
+        <div class="cta">
+          <a class="btn btn-primary" href="docs.html#/home">Read the docs</a>
+          <a class="btn btn-ghost" href="#how">See how it works</a>
+        </div>
+      </div>
+
+      <div class="wrap">
+        <figure class="editor" aria-label="Example: a plugin that injects a service">
+          <div class="editor-bar">
+            <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="file"><svg aria-hidden="true" viewBox="0 0 16 16" width="13" height="13"><path fill="#f05138" d="M13.5 10.6c.1-.3.1-.7.1-1 0-3.3-2.6-6.6-6-8.6 1.5 2 2.3 4.4 1.7 6.5C7 6.3 4.1 4.3 2.5 3c1.5 1.8 3 3.4 4.1 4.6C4.9 6.7 2.8 5.2 1.3 4.2c1.6 3 4.7 6.1 7.6 7.4-2.1 1.2-4.9 1.1-7.7-.3 1.8 2.3 4.6 4 7.4 4 1.7 0 2.7-.9 3.7-.9.8 0 1.3.5 1.7 1 .3-1.3-.1-3-.5-3.8Z"/></svg>Greeter.swift</span>
+          </div>
+<pre class="editor-code"><code class="language-swift">import Cordis
+
+enum ClockKey: ServiceKey {
+  typealias Value = ClockService
+  static let name = "clock"
+}
+
+@CordisActor @Service(ClockKey.self)
+final class ClockService {
+  func now() -&gt; Date { Date() }
+}
+
+@CordisActor @Plugin
+final class Greeter {
+  @Inject(ClockKey.self) var clock: ClockService   // runs only while "clock" is provided
+
+  func apply(_ scope: EffectScope) async throws {
+    print("hello at \(try clock.now())")
+    try scope.collect { print("bye") }              // undone automatically on unload
+  }
+}
+
+let root = Context()
+let greeter = try root.plugin(Greeter.self)        // pending: no clock yet
+let clock = try await root.plugin(ClockService.self).await()
+try await greeter.await()                          // active
+try await clock.dispose()                          // greeter unloads ("bye"), back to pending</code></pre>
+        </figure>
+      </div>
+    </section>
+
+    <section id="features" class="section">
+      <div class="wrap">
+        <p class="kicker">Why cordis-ios</p>
+        <h2>Composition you can switch off.</h2>
+        <p class="sub">Feature flags, modules and extensions usually leak: an observer that outlives its screen, a service nobody unregistered. cordis makes every side effect revertible and every dependency reactive.</p>
+        <div class="grid">
+          <article class="card">
+            <svg class="ico" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 3-6.2M4 4v4h4"/></svg>
+            <h3>Revertible effects</h3>
+            <p>Listeners, provided services, child plugins and UI contributions are effects. Unloading runs their disposers newest first, so teardown always matches setup.</p>
+          </article>
+          <article class="card">
+            <svg class="ico" aria-hidden="true" viewBox="0 0 24 24"><path d="M7 7h4v4H7zM13 13h4v4h-4zM11 9h4v4"/></svg>
+            <h3>Reactive dependency injection</h3>
+            <p>A plugin runs only while every service it injects is available. Withdraw a service and its consumers drop to pending; provide it again and they reload.</p>
+          </article>
+          <article class="card">
+            <svg class="ico" aria-hidden="true" viewBox="0 0 24 24"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12 4 7.5M12 12l8-4.5M12 12v9"/></svg>
+            <h3>Isolated realms</h3>
+            <p>Run two providers of the same service side by side. A context resolves each service name in its own realm, so a subtree never sees the other's instance.</p>
+          </article>
+          <article class="card">
+            <svg class="ico" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 4h10l4 4v12H5z"/><path d="M15 4v4h4M8 13h8M8 17h5"/></svg>
+            <h3>Persisted loader</h3>
+            <p>Describe the plugin tree as JSON. The Loader diffs it against what is running by id: changed configs reload, removed entries are disposed, the rest keep running.</p>
+          </article>
+          <article class="card">
+            <svg class="ico" aria-hidden="true" viewBox="0 0 24 24"><path d="M9 4C6 4 6 6 6 8s-2 4-2 4 2 2 2 4 0 4 3 4M15 4c3 0 3 2 3 4s2 4 2 4-2 2-2 4 0 4-3 4"/></svg>
+            <h3>Swift macros</h3>
+            <p><code>@Plugin</code>, <code>@Service</code> and <code>@Inject</code> generate the init, config and inject list. A plugin is a class with one <code>apply</code> method.</p>
+          </article>
+          <article class="card">
+            <svg class="ico" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg>
+            <h3>Strict concurrency</h3>
+            <p>Swift 6 language mode. One global actor, <code>CordisActor</code>, owns contexts, fibers and listeners, so lifecycle transitions never race.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="how" class="section section-alt">
+      <div class="wrap">
+        <p class="kicker">How it works</p>
+        <h2>Three pieces. One lifecycle.</h2>
+
+        <div class="step">
+          <div class="step-text">
+            <span class="num">1</span>
+            <h3>Provide a service</h3>
+            <p>A service is a plugin that provides itself under a typed key. It is available to consumers once its fiber is active, and withdrawn the moment it unloads.</p>
+            <a class="link" href="docs.html#/concepts/services-and-injection">Services and injection →</a>
+          </div>
+          <pre class="code"><code class="language-swift">enum CounterKey: ServiceKey {
+  typealias Value = CounterService
+  static let name = "counter"
+}
+
+@CordisActor @Service(CounterKey.self)
+final class CounterService {
+  private(set) var value = 0
+  func add(_ delta: Int) { value += delta }
+}</code></pre>
+        </div>
+
+        <div class="step">
+          <div class="step-text">
+            <span class="num">2</span>
+            <h3>Write a plugin that depends on it</h3>
+            <p>Declare what you need with <code>@Inject</code>. Everything <code>apply</code> installs, from listeners to UI, is collected and reverted when the plugin stops for any reason.</p>
+            <a class="link" href="docs.html#/concepts/effects">Effects →</a>
+          </div>
+          <pre class="code"><code class="language-swift">@CordisActor @Plugin
+final class CounterBadge {
+  @Inject(CounterKey.self) var counter: CounterService
+
+  func apply(_ scope: EffectScope) async throws {
+    let badge = Badge(value: try counter.value)
+    toolbar.add(badge)
+    try scope.collect { toolbar.remove(badge) }
+  }
+}</code></pre>
+        </div>
+
+        <div class="step">
+          <div class="step-text">
+            <span class="num">3</span>
+            <h3>Run the tree from JSON</h3>
+            <p>Register plugins in a catalog and hand the Loader a store. Toggle, reconfigure or remove entries at runtime; it reconciles by id and saves the tree.</p>
+            <a class="link" href="docs.html#/concepts/loader">Loader →</a>
+          </div>
+          <pre class="code"><code class="language-swift">var catalog = PluginCatalog()
+catalog.register(CounterService.self, as: "counter")
+catalog.register(CounterBadge.self, as: "badge")
+
+let loader = Loader(ctx: root, catalog: catalog,
+                    store: FileEntryStore(url: entriesURL))
+try await loader.start()
+try await loader.setDisabled(id: "counter", true)
+// badge drops to pending; its toolbar badge is gone</code></pre>
+        </div>
+
+        <div class="lifecycle" role="img" aria-label="Fiber lifecycle: pending, loading, active, unloading, then pending again or disposed">
+          <span class="state s-pending">pending</span><span class="arrow">→</span>
+          <span class="state s-loading">loading</span><span class="arrow">→</span>
+          <span class="state s-active">active</span><span class="arrow">→</span>
+          <span class="state s-unloading">unloading</span><span class="arrow">→</span>
+          <span class="state s-pending">pending</span><span class="sep">or</span>
+          <span class="state s-disposed">disposed</span>
+        </div>
+        <p class="caption">Every transition is emitted as <code>internal/status</code>. <a href="docs.html#/architecture/fiber-state-machine">Full state machine →</a></p>
+      </div>
+    </section>
+
+    <section id="showcase" class="section">
+      <div class="wrap">
+        <p class="kicker">Cordis Showcase</p>
+        <h2>See it run on an iPhone.</h2>
+        <p class="sub">A SwiftUI app built entirely from plugins. A ten-step tour withdraws services, rejects configs, recovers failed plugins and isolates realms while you watch every fiber change state.</p>
+        <div class="phones">
+          <figure class="phone side"><img src="assets/screenshots/plugins.png" alt="Plugins tab: each entry with its live state and an enable switch" loading="lazy" width="598" height="1300"></figure>
+          <figure class="phone"><img src="assets/screenshots/dashboard.png" alt="Dashboard: six cards, each contributed by a different plugin" loading="lazy" width="598" height="1300"></figure>
+          <figure class="phone side"><img src="assets/screenshots/timeline.png" alt="Timeline: the internal events caused by disabling a service" loading="lazy" width="598" height="1300"></figure>
+        </div>
+        <div class="cta center">
+          <a class="btn btn-primary" href="docs.html#/showcase">Explore the showcase</a>
+          <a class="btn btn-ghost" href="https://github.com/eovidiu/cordis-ios/tree/main/Examples/CordisShowcase">Build it from source</a>
+        </div>
+        <p class="caption center">Coming to the App Store. Run it today on a simulator with <code>Examples/CordisShowcase/run.sh sim</code>.</p>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="wrap docs-grid">
+        <a class="doc-card" href="docs.html#/concepts">
+          <h3>Concepts</h3>
+          <p>Contexts, fibers, effects, services, events, realms and the loader, one idea at a time.</p>
+        </a>
+        <a class="doc-card" href="docs.html#/architecture">
+          <h3>Architecture (C4)</h3>
+          <p>Context, container, component and code views, plus sequence diagrams of real transitions.</p>
+        </a>
+        <a class="doc-card" href="https://github.com/eovidiu/cordis-ios/blob/main/docs/specs/0001-per-user-plugins.md">
+          <h3>Spec: per-user plugins</h3>
+          <p>Signed, per-user plugin documents managed from a server admin interface.</p>
+        </a>
+        <a class="doc-card" href="https://github.com/eovidiu/cordis-ios">
+          <h3>Source on GitHub</h3>
+          <p>MIT licensed. Swift Package with the library, macros, demos and the ported test suite.</p>
+        </a>
+      </div>
+    </section>
+
+    <section class="section credits">
+      <div class="wrap narrow">
+        <p class="kicker">Built on research</p>
+        <blockquote>
+          <p>“A Programming Paradigm for Spatiotemporal Composability”</p>
+          <footer>Yifan Shi, Wei Zhang, Tianyi Cui · <a href="https://arxiv.org/abs/2608.25512">arXiv:2608.25512</a></footer>
+        </blockquote>
+        <p class="sub">cordis is created by <a href="https://github.com/shigma">Shigma</a> and the <a href="https://github.com/cordiverse/cordis/graphs/contributors">cordiverse contributors</a>. cordis-ios is an independent Swift port that follows cordis 4.0 and ports its test suite; it is not affiliated with or endorsed by the cordis authors.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot-inner">
+      <span>© 2026 Ovidiu Eftimie · MIT License</span>
+      <nav aria-label="Footer">
+        <a href="docs.html#/home">Docs</a>
+        <a href="docs.html#/privacy">Privacy</a>
+        <a href="https://github.com/eovidiu/cordis-ios/issues">Support</a>
+        <a href="https://github.com/eovidiu/cordis-ios">GitHub</a>
+      </nav>
+    </div>
   </footer>
-  <script type="module" src="assets/site.js"></script>
+
+  <script type="module" src="assets/landing.js"></script>
 </body>
 </html>

@@ -23,12 +23,14 @@ The port follows cordis commit `f8ea3cd` (`cordis@4.0.0-rc.10`) and the paper [a
 ```swift
 // Package.swift
 dependencies: [
-  .package(url: "https://github.com/eovidiu/cordis-ios.git", branch: "main"),
+  .package(url: "https://github.com/eovidiu/cordis-ios.git", from: "0.1.0"),
 ],
 targets: [
   .target(name: "MyApp", dependencies: [.product(name: "Cordis", package: "cordis-ios")]),
 ]
 ```
+
+In Xcode: **File ▸ Add Package Dependencies…**, paste `https://github.com/eovidiu/cordis-ios.git`, and add the `Cordis` library to your target.
 
 ## A first plugin
 

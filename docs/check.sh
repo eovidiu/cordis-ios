@@ -24,9 +24,9 @@ def strip_code(markdown):
 site_js = (docs / "assets/site.js").read_text()
 routed = re.search(r"const PAGES = \[(.*?)\]", site_js).group(1)
 routed = re.findall(r'"([\w-]+)"', routed)
-nav = re.findall(r'data-page="([\w-]+)"', (docs / "index.html").read_text())
+nav = re.findall(r'data-page="([\w-]+)"', (docs / "docs.html").read_text())
 if routed != nav:
-    problems.append(f"index.html nav {nav} differs from site.js PAGES {routed}")
+    problems.append(f"docs.html nav {nav} differs from site.js PAGES {routed}")
 
 anchors = {}
 for name in routed:
@@ -68,6 +68,39 @@ for view in ["C4Context", "C4Container", "C4Component", "classDiagram", "stateDi
 
 if not (docs / ".nojekyll").exists():
     problems.append(".nojekyll missing: GitHub Pages would run Jekyll over docs/")
+
+# Landing page and 404: every local link and asset exists, every docs.html
+# deep link names a routed page and an existing heading, and the sharing
+# metadata is complete.
+import struct
+for html_name in ["index.html", "404.html"]:
+    html = (docs / html_name).read_text()
+    for target in re.findall(r'(?:href|src)="([^"]+)"', html):
+        if re.match(r"https?:|mailto:|#", target):
+            continue
+        path, _, fragment = target.partition("#")
+        path = re.sub(r"^/cordis-ios/", "", path) or "index.html"
+        if path.endswith("/") or path == "./":
+            path += "index.html"
+        if not (docs / path).exists():
+            problems.append(f"{html_name}: missing file {target}")
+        if path == "docs.html" and fragment:
+            route = fragment.lstrip("/").split("/", 1)
+            if route[0] not in routed:
+                problems.append(f"{html_name}: unrouted docs page {target}")
+            elif len(route) == 2 and route[1] not in anchors.get(route[0], set()):
+                problems.append(f"{html_name}: anchor not found {target}")
+    for anchor in re.findall(r'href="#([\w-]+)"', html):
+        if f'id="{anchor}"' not in html:
+            problems.append(f"{html_name}: in-page anchor #{anchor} has no target")
+
+landing = (docs / "index.html").read_text()
+for meta in ['property="og:title"', 'property="og:description"', 'property="og:image"', 'name="twitter:card"', 'rel="canonical"', 'name="description"']:
+    if meta not in landing:
+        problems.append(f"index.html: missing {meta}")
+og = (docs / "assets/og.png").read_bytes()[:24]
+if struct.unpack(">II", og[16:24]) != (1200, 630):
+    problems.append("assets/og.png must be 1200x630")
 
 for problem in problems:
     print(f"docs/check.sh: {problem}", file=sys.stderr)

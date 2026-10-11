@@ -5,10 +5,11 @@
 // correctly on GitHub and here.
 import { marked } from "https://cdn.jsdelivr.net/npm/marked@15.0.12/lib/marked.esm.js";
 import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs";
+import { highlight } from "./highlight.js";
 
 const PAGES = ["home", "concepts", "architecture", "showcase", "privacy"];
 const TITLES = {
-  home: "Overview",
+  home: "Get started",
   concepts: "Concepts",
   architecture: "Architecture (C4)",
   showcase: "Showcase app",
@@ -103,7 +104,8 @@ async function render() {
   for (const link of document.querySelectorAll("nav.pages a")) {
     link.toggleAttribute("aria-current", link.dataset.page === page);
   }
-  const response = await fetch(`pages/${page}.md`);
+  // Revalidate on every visit, so pages are current right after a deploy.
+  const response = await fetch(`pages/${page}.md`, { cache: "no-cache" });
   if (!response.ok) {
     content.textContent = `Could not load ${page}.md (HTTP ${response.status}).`;
     return;
@@ -113,7 +115,7 @@ async function render() {
   rewriteLinks(content, page);
   buildToc(content);
   document.title = `${TITLES[page]} · cordis-ios`;
-  await renderDiagrams(content);
+  await Promise.all([renderDiagrams(content), highlight(content)]);
   content.dataset.rendered = page;
   const target = anchor && document.getElementById(anchor);
   if (target) target.scrollIntoView();
