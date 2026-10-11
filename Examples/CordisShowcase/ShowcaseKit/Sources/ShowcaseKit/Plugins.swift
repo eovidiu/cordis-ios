@@ -80,7 +80,11 @@ final class ClockService {
         try? ctx.emit(TickEvent.self, Date())
       }
     }
-    try scope.collect { timer.cancel() }
+    ctx.logger.info("providing service \"clock\": a tick every \(interval.formatted())s")
+    try scope.collect { [weak self] in
+      timer.cancel()
+      ctx.logger.info("stopped after \(self?.ticks ?? 0) ticks")
+    }
   }
 }
 
@@ -92,6 +96,12 @@ final class CounterService {
   func add(_ delta: Int) {
     value += delta
     try? ctx.emit(CounterChangedEvent.self, value)
+  }
+
+  func setup(_ scope: EffectScope) async throws {
+    ctx.logger.info("providing service \"counter\", starting at 0")
+    let ctx = ctx
+    try scope.collect { [weak self] in ctx.logger.info("stopped at \(self?.value ?? 0)") }
   }
 }
 
@@ -116,12 +126,18 @@ final class NetworkService {
     }
   }
 
+  func setup(_ scope: EffectScope) async throws {
+    ctx.logger.info("providing service \"network\": simulated latency \((config.latency ?? 1.2).formatted())s")
+  }
+
   func forecast(for city: String) async throws -> Forecast {
     try await Task.sleep(for: .seconds(config.latency ?? 1.2))
     let seed = city.unicodeScalars.reduce(0) { $0 &+ Int($1.value) }
     let conditions = [("Sunny", "sun.max"), ("Cloudy", "cloud"), ("Rain", "cloud.rain"), ("Windy", "wind")]
     let (condition, symbol) = conditions[seed % conditions.count]
-    return Forecast(temperature: 8 + seed % 22, condition: condition, symbol: symbol)
+    let forecast = Forecast(temperature: 8 + seed % 22, condition: condition, symbol: symbol)
+    ctx.logger.info("served forecast for \(city): \(forecast.temperature)°C, \(condition)")
+    return forecast
   }
 }
 
@@ -144,6 +160,10 @@ final class ThemeService {
 
   var displayName: String { config.name ?? "Default" }
   var tint: CardTint { config.tint.flatMap(CardTint.init(rawValue:)) ?? .gray }
+
+  func setup(_ scope: EffectScope) async throws {
+    ctx.logger.info("providing service \"theme\": \(displayName) (\(tint.rawValue)) in realm \"\(realmLabel(ThemeKey.name, in: ctx))\"")
+  }
 }
 
 // MARK: - plugins

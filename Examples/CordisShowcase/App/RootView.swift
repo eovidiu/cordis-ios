@@ -28,6 +28,8 @@ struct RootView: View {
         .tabItem { Label("Timeline", systemImage: "list.bullet.rectangle") }
         .tag(AppTab.timeline)
     }
+    .tint(Brand.accent)
+    .preferredColorScheme(.dark)
     .alert(item: $store.problem) { problem in
       Alert(title: Text(problem.title), message: Text(problem.message))
     }
@@ -40,7 +42,7 @@ struct BusyIndicator: View {
 
   var body: some View {
     if store.isBusy {
-      ProgressView()
+      ProgressView().tint(Brand.accent)
     }
   }
 }

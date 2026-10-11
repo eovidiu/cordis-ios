@@ -24,19 +24,24 @@ struct TimelineView: View {
   }
 
   var body: some View {
+    let events = store.snapshot.timeline.reversed().filter { filter.includes($0.kind) }
     NavigationStack {
-      List(store.snapshot.timeline.reversed().filter { filter.includes($0.kind) }) { event in
-        TimelineRow(event: event)
+      List(Array(events.enumerated()), id: \.element.id) { index, event in
+        TimelineRow(event: event, isFirst: index == 0, isLast: index == events.count - 1)
+          .listRowBackground(Color.clear)
+          .listRowSeparator(.hidden)
+          .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
       }
       .listStyle(.plain)
-      .safeAreaInset(edge: .top) {
+      .brandScreen()
+      .safeAreaInset(edge: .top, spacing: 0) {
         Picker("Filter", selection: $filter) {
           ForEach(Filter.allCases, id: \.self) { Text($0.rawValue) }
         }
         .pickerStyle(.segmented)
         .padding(.horizontal)
         .padding(.vertical, 8)
-        .background(.bar)
+        .background(Brand.background)
       }
       .navigationTitle("Timeline")
       .navigationBarTitleDisplayMode(.inline)
@@ -49,22 +54,38 @@ struct TimelineView: View {
 
 private struct TimelineRow: View {
   let event: TimelineEvent
+  let isFirst: Bool
+  let isLast: Bool
 
   var body: some View {
-    HStack(alignment: .firstTextBaseline, spacing: 8) {
-      Image(systemName: symbol)
-        .foregroundStyle(color)
-        .frame(width: 18)
-      VStack(alignment: .leading, spacing: 2) {
-        Text(event.text)
-          .font(event.kind == .action ? .callout.weight(.semibold) : .callout.monospaced())
-          .foregroundStyle(event.kind == .error ? .red : .primary)
-        Text("\(event.date.formatted(date: .omitted, time: .standard)) · \(label)")
-          .font(.caption2)
-          .foregroundStyle(.secondary)
+    HStack(alignment: .top, spacing: 12) {
+      // the rail: a dot per event joined by a hairline
+      VStack(spacing: 0) {
+        Rectangle().fill(isFirst ? .clear : Brand.lineStrong).frame(width: 1, height: 14)
+        Circle()
+          .fill(color)
+          .frame(width: event.kind == .action ? 11 : 8, height: event.kind == .action ? 11 : 8)
+          .shadow(color: color.opacity(0.6), radius: event.kind == .action ? 5 : 0)
+        Rectangle().fill(isLast ? .clear : Brand.lineStrong).frame(width: 1).frame(maxHeight: .infinity)
       }
+      .frame(width: 12)
+
+      VStack(alignment: .leading, spacing: 4) {
+        HStack(spacing: 6) {
+          Text(event.date.formatted(.dateTime.hour(.twoDigits(amPM: .omitted)).minute().second()))
+            .font(Brand.mono(.caption2))
+            .foregroundStyle(Brand.dim)
+          Tag(text: label, tint: color)
+        }
+        Text(event.text)
+          .font(event.kind == .action ? .callout.weight(.semibold) : Brand.mono(.footnote))
+          .foregroundStyle(event.kind == .error ? color : Brand.foreground)
+          .fixedSize(horizontal: false, vertical: true)
+      }
+      .padding(.top, 9)
+      .padding(.bottom, 12)
+      Spacer(minLength: 0)
     }
-    .listRowBackground(event.kind == .action ? Color.accentColor.opacity(0.08) : nil)
   }
 
   private var label: String {
@@ -73,31 +94,19 @@ private struct TimelineRow: View {
     case .status: "internal/status"
     case .plugin: "internal/plugin"
     case .service: "internal/service"
-    case .info, .warn, .error, .debug: "logger · \(event.kind.rawValue)"
-    }
-  }
-
-  private var symbol: String {
-    switch event.kind {
-    case .action: "hand.tap"
-    case .status: "arrow.right.circle"
-    case .plugin: "puzzlepiece.extension"
-    case .service: "point.3.connected.trianglepath.dotted"
-    case .info, .debug: "text.bubble"
-    case .warn: "exclamationmark.bubble"
-    case .error: "exclamationmark.octagon"
+    case .info, .warn, .error, .debug: "log·\(event.kind.rawValue)"
     }
   }
 
   private var color: Color {
     switch event.kind {
-    case .action: .accentColor
-    case .status: .green
-    case .plugin: .purple
-    case .service: .blue
-    case .info, .debug: .secondary
-    case .warn: .orange
-    case .error: .red
+    case .action: Brand.accent
+    case .status: EntryState.active.color
+    case .plugin: EntryState.unloading.color
+    case .service: EntryState.loading.color
+    case .info, .debug: Brand.muted
+    case .warn: EntryState.pending.color
+    case .error: EntryState.failed.color
     }
   }
 }

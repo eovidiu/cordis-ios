@@ -26,6 +26,8 @@ public final class ShowcaseEngine {
   private var nextEventID = 0
   private var revision = 0
   private var refreshPending = false
+  /// The operation in flight; the next one starts after it finishes.
+  private var queue: Task<OperationResult, Never>?
   private var started = false
   private let timelineLimit = 400
 
@@ -56,19 +58,27 @@ public final class ShowcaseEngine {
   }
 
   /// Runs `operation` and reports what the system logged as errors meanwhile.
+  /// Operations run one at a time in call order, so the errors reported are
+  /// those of this operation even when the user taps faster than plugins load.
   public func run(_ operation: ShowcaseOperation) async -> OperationResult {
-    record(.action, operation.description)
-    let mark = nextEventID
-    var thrown: String?
-    do {
-      try await perform(operation)
-      await settle()
-    } catch {
-      thrown = String(describing: error)
+    let previous = queue
+    let current = Task { @CordisActor [self] () -> OperationResult in
+      _ = await previous?.value
+      record(.action, operation.description)
+      let mark = nextEventID
+      var thrown: String?
+      do {
+        try await perform(operation)
+        await settle()
+      } catch {
+        thrown = String(describing: error)
+      }
+      let errors = timeline.filter { $0.event.id >= mark && $0.event.kind == .error }.map(\.event.text)
+      scheduleRefresh()
+      return OperationResult(errors: errors, thrown: thrown)
     }
-    let errors = timeline.filter { $0.event.id >= mark && $0.event.kind == .error }.map(\.event.text)
-    scheduleRefresh()
-    return OperationResult(errors: errors, thrown: thrown)
+    queue = current
+    return await current.value
   }
 
   /// Runs a card button.

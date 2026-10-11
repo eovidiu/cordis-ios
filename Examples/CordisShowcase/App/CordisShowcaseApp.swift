@@ -12,9 +12,15 @@ struct CordisShowcaseApp: App {
           RootView()
             .environment(store)
         } else {
-          ProgressView("Starting cordis…")
+          VStack(spacing: 14) {
+            ProgressView().tint(Brand.accent)
+            Text("Starting cordis…").font(Brand.mono(.footnote)).foregroundStyle(Brand.muted)
+          }
+          .frame(maxWidth: .infinity, maxHeight: .infinity)
+          .background(Brand.background)
         }
       }
+      .preferredColorScheme(.dark)
       .task {
         guard store == nil else { return }
         store = await Self.makeStore()

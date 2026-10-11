@@ -14,7 +14,7 @@ filter_for() {
     F005) echo 'Macro' ;;
     F006) echo 'Loader' ;;
     F007) echo 'Demo' ;;
-    F008|F009|F010|F012) echo '' ;;
+    F008|F009|F010|F012|F013) echo '' ;;
     *) echo "unknown feature: $1" >&2; exit 2 ;;
   esac
 }
@@ -27,7 +27,7 @@ case "${1:-}" in
     feature="${2:-}"
     filter="$(filter_for "$feature")"
     case "$feature" in
-      F008)
+      F008|F013)
         swift test --package-path "$SHOWCASE"
         # compile the SwiftUI app too; XCUITests stay behind run.sh uitest
         (cd Examples/CordisShowcase && xcodegen generate --quiet && xcodebuild \

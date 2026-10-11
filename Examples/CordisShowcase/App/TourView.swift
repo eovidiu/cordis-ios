@@ -31,8 +31,9 @@ struct TourView: View {
         }
         .padding()
       }
-      .background(Color(.systemGroupedBackground))
-      .navigationTitle("Cordis Tour")
+      .brandScreen()
+      .navigationTitle("Tour")
+      .navigationBarTitleDisplayMode(.inline)
       .toolbar {
         ToolbarItem(placement: .topBarTrailing) { BusyIndicator() }
         ToolbarItem(placement: .topBarTrailing) {
@@ -52,37 +53,53 @@ struct TourView: View {
     TourStep.all.first { !completed.contains($0.id) }?.id
   }
 
+  /// The website hero, condensed: eyebrow pill, gradient headline, lede.
   private var intro: some View {
-    VStack(alignment: .leading, spacing: 8) {
-      Text("An app made of plugins")
-        .font(.title2.bold())
-      Text("Every card on the Dashboard is contributed by a plugin running in cordis. Plugins declare the services they need; cordis loads them when those services exist, unloads them when they go away, and undoes everything a plugin did when it stops.")
+    VStack(alignment: .leading, spacing: 12) {
+      HStack(spacing: 7) {
+        Circle().fill(Color(hex: 0x3DDC84)).frame(width: 7, height: 7)
+          .shadow(color: Color(hex: 0x3DDC84), radius: 4)
+        Text("Swift 6 · cordis-ios · MIT").font(Brand.mono(.caption2))
+      }
+      .foregroundStyle(Brand.muted)
+      .padding(.horizontal, 11)
+      .padding(.vertical, 5)
+      .overlay(Capsule().strokeBorder(Brand.lineStrong))
+      Text("Plugins that clean up after themselves.")
+        .font(.system(.largeTitle, design: .default).weight(.bold))
+        .tracking(-0.8)
+        .foregroundStyle(LinearGradient(colors: [.white, Color(hex: 0xB7B6C8)], startPoint: .top, endPoint: .bottom))
+        .fixedSize(horizontal: false, vertical: true)
+      Text("Every card on the Dashboard comes from a plugin. Plugins declare the services they need; cordis loads them when those services exist, unloads them when they go away, and undoes everything a plugin did when it stops.")
         .font(.callout)
-        .foregroundStyle(.secondary)
-      Text("Run the steps in order and watch the entries change state.")
-        .font(.callout)
-        .foregroundStyle(.secondary)
+        .foregroundStyle(Brand.muted)
+      Kicker(text: "Run the steps in order").padding(.top, 6)
     }
     .padding(.bottom, 4)
+    .background(alignment: .topLeading) {
+      RadialGradient(colors: [Color(hex: 0x6E6AF0).opacity(0.28), .clear], center: .topLeading, startRadius: 0, endRadius: 260)
+        .frame(width: 520, height: 360)
+        .offset(x: -120, y: -140)
+        .allowsHitTesting(false)
+    }
   }
 
   private var credits: some View {
     Button { showingAbout = true } label: {
       HStack(spacing: 12) {
-        Image(systemName: "heart.text.square")
-          .font(.title2)
-        VStack(alignment: .leading, spacing: 2) {
-          Text("Credits").font(.headline)
+        IconBadge(systemImage: "heart.text.square", tint: Brand.accent)
+        VStack(alignment: .leading, spacing: 3) {
+          Kicker(text: "Built on research")
           Text("cordis by Shigma and the cordiverse contributors, the paper behind it, and the Swift port on GitHub.")
             .font(.caption)
-            .foregroundStyle(.secondary)
+            .foregroundStyle(Brand.muted)
             .multilineTextAlignment(.leading)
         }
         Spacer()
-        Image(systemName: "chevron.right").foregroundStyle(.tertiary)
+        Image(systemName: "chevron.right").foregroundStyle(Brand.dim)
       }
       .padding()
-      .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16))
+      .panel()
     }
     .buttonStyle(.plain)
     .accessibilityLabel("Credits")
@@ -110,57 +127,57 @@ private struct TourStepCard: View {
   let showDashboard: () -> Void
 
   var body: some View {
-    VStack(alignment: .leading, spacing: 10) {
-      HStack(alignment: .firstTextBaseline) {
+    VStack(alignment: .leading, spacing: 12) {
+      HStack(alignment: .center, spacing: 10) {
         Text("\(step.id)")
-          .font(.headline.monospacedDigit())
-          .foregroundStyle(.white)
-          .frame(width: 28, height: 28)
-          .background(isDone ? Color.green : Color.accentColor, in: Circle())
+          .font(Brand.mono(.subheadline, weight: .semibold))
+          .foregroundStyle(isDone ? EntryState.active.color : Brand.accent)
+          .frame(width: 30, height: 30)
+          .background(Brand.panelRaised, in: RoundedRectangle(cornerRadius: 9))
+          .overlay(RoundedRectangle(cornerRadius: 9).strokeBorder(Brand.lineStrong))
         VStack(alignment: .leading, spacing: 2) {
-          Text(step.title).font(.headline)
-          Tag(text: step.concept, systemImage: "lightbulb", tint: .accentColor)
+          Kicker(text: step.concept)
+          Text(step.title).font(.headline).foregroundStyle(Brand.foreground)
         }
         Spacer()
         if isDone {
-          Image(systemName: "checkmark.circle.fill").foregroundStyle(.green)
+          Image(systemName: "checkmark.circle.fill").foregroundStyle(EntryState.active.color)
         }
       }
       Text(step.explanation)
         .font(.subheadline)
+        .foregroundStyle(Brand.muted)
         .fixedSize(horizontal: false, vertical: true)
       entries
       if isDone {
         Label(step.observe, systemImage: "eye")
           .font(.subheadline)
-          .foregroundStyle(.secondary)
+          .foregroundStyle(Brand.foreground)
+          .padding(10)
+          .frame(maxWidth: .infinity, alignment: .leading)
+          .background(Brand.code, in: RoundedRectangle(cornerRadius: 10))
           .fixedSize(horizontal: false, vertical: true)
           .transition(.opacity)
       }
-      HStack {
+      HStack(spacing: 10) {
         Button(action: run) {
           if isRunning {
-            ProgressView().frame(maxWidth: .infinity)
+            ProgressView().tint(Brand.background)
           } else {
             Label(isDone ? "Run again" : "Run step", systemImage: "play.fill")
-              .frame(maxWidth: .infinity)
           }
         }
-        .buttonStyle(.borderedProminent)
-        .tint(isNext ? .accentColor : .secondary)
+        .buttonStyle(PrimaryButtonStyle())
+        .opacity(isNext || isDone ? 1 : 0.75)
         .disabled(isRunning || store.isBusy)
         Button("Dashboard", systemImage: "square.grid.2x2", action: showDashboard)
-          .buttonStyle(.bordered)
           .labelStyle(.iconOnly)
+          .buttonStyle(GhostButtonStyle())
           .accessibilityLabel("Show dashboard")
       }
     }
     .padding()
-    .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16))
-    .overlay {
-      RoundedRectangle(cornerRadius: 16)
-        .strokeBorder(isNext ? Color.accentColor.opacity(0.5) : .clear, lineWidth: 1.5)
-    }
+    .panel(highlighted: isNext)
     .animation(.default, value: isDone)
   }
 
@@ -170,11 +187,11 @@ private struct TourStepCard: View {
     return FlowLayout(spacing: 6) {
       ForEach(ids, id: \.self) { id in
         HStack(spacing: 4) {
-          Text(id).font(.caption.monospaced())
+          Text(id).font(Brand.mono(.caption)).foregroundStyle(Brand.foreground)
           if let row = store.snapshot.row(id) {
             StateBadge(state: row.state)
           } else {
-            Tag(text: "absent", tint: .gray)
+            Tag(text: "absent", tint: Brand.dim)
           }
         }
         .fixedSize()

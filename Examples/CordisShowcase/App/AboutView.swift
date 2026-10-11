@@ -98,6 +98,7 @@ struct AboutView: View {
           }
         }
       }
+      .brandScreen()
       .navigationTitle("About")
       .navigationBarTitleDisplayMode(.inline)
       .toolbar {

@@ -140,8 +140,7 @@
     {
       "id": "F013",
       "description": "Pre-submission review of the showcase: every sample plugin reports what it did (card, log or alert), no operation sequence crashes or orphans fibers (Loader serializes reconciles), and the app is restyled to match the website",
-      "status": "in-progress",
-      "assigned_to": "session-5",
+      "status": "passing",
       "scope": [
         "Sources/Cordis/Loader",
         "Tests/CordisTests",

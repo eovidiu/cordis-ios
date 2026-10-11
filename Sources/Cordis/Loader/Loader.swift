@@ -20,6 +20,8 @@ public final class Loader {
   private var localRealms: [String: Realm] = [:]
   private var sharedRealms: [String: Realm] = [:]
   private var listener: EffectHandle?
+  /// The reconcile in flight; the next one starts after it finishes.
+  private var applying: Task<Void, Never>?
 
   public init(ctx: Context, catalog: PluginCatalog, store: any EntryStore) {
     self.ctx = ctx
@@ -90,9 +92,19 @@ public final class Loader {
 
   // MARK: - internals
 
+  /// Reconciles the running fibers with `entries`. Calls are serialized:
+  /// interleaved reconciles of the same nodes would start a fiber twice and
+  /// orphan one. Each reconcile reads `entries` when it starts, so the last
+  /// mutation always wins.
   private func apply() async {
-    await root.reconcile(entries)
-    pruneSharedRealms()
+    let previous = applying
+    let current = Task { @CordisActor [self] in
+      await previous?.value
+      await root.reconcile(entries)
+      pruneSharedRealms()
+    }
+    applying = current
+    await current.value
   }
 
   private func persistConfig(_ config: (any Sendable)?, of id: String) throws {

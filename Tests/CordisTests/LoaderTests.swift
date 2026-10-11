@@ -32,6 +32,14 @@ final class LoaderPlain {
   func apply(_ scope: EffectScope) async throws {}
 }
 
+/// Suspends inside `apply`, so loader mutations issued meanwhile interleave.
+@CordisActor @Plugin
+final class LoaderSlow {
+  func apply(_ scope: EffectScope) async throws {
+    for _ in 0..<5 { await Task.yield() }
+  }
+}
+
 @Suite("LoaderTests")
 @CordisActor
 struct LoaderTests {
@@ -40,6 +48,7 @@ struct LoaderTests {
     catalog.register(LoaderFoo.self, as: "foo")
     catalog.register(LoaderBar.self, as: "bar")
     catalog.register(LoaderPlain.self, as: "plain")
+    catalog.register(LoaderSlow.self, as: "slow")
     return catalog
   }
 
@@ -174,5 +183,30 @@ struct LoaderTests {
     #expect(loader.fiber(for: "s2")?.state == .active)
     #expect(loader.fiber(for: "s3")?.state == .pending)
     #expect(root.get(LoaderFooKey.self, strict: false) == nil)
+  }
+
+  @Test("concurrent mutations leave exactly one fiber per running entry")
+  func concurrentMutations() async throws {
+    let (root, loader, _) = try await start([
+      Entry(id: "a", plugin: "foo"),
+      Entry(id: "b", plugin: "bar"),
+      Entry(id: "s", plugin: "slow"),
+    ])
+    let mutations: [@CordisActor () async throws -> Void] = [
+      { try await loader.setDisabled(id: "a", true) },
+      { try await loader.add(Entry(id: "t", plugin: "slow")) },
+      { try await loader.remove(id: "s") },
+      { try await loader.setDisabled(id: "a", false) },
+      { try await loader.add(Entry(id: "u", plugin: "slow")) },
+      { try await loader.remove(id: "t") },
+    ]
+    let tasks = mutations.map { mutation in Task { @CordisActor in try await mutation() } }
+    for task in tasks { try await task.value }
+
+    #expect(loader.entries.map(\.id) == ["a", "b", "u"])
+    let live = root.registry.runtimes.flatMap(\.fiberList).filter { $0.uid != nil }
+    let owned = loader.entries.compactMap { loader.fiber(for: $0.id) }
+    #expect(live.count == owned.count)
+    #expect(owned.map(\.state) == [.active, .active, .active])
   }
 }

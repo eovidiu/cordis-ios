@@ -16,6 +16,81 @@ final class ShowcaseUITests: XCTestCase {
     app.tabBars.buttons[name].tap()
   }
 
+  /// Scrolls the current list until `element` can be tapped.
+  private func reveal(_ element: XCUIElement, file: StaticString = #filePath, line: UInt = #line) {
+    var swipes = 0
+    while !(element.exists && element.isHittable) && swipes < 8 {
+      app.swipeUp()
+      swipes += 1
+    }
+    XCTAssertTrue(element.isHittable, "\(element) not reachable", file: file, line: line)
+  }
+
+  /// Dismisses the error alert if one is shown and returns its text.
+  @discardableResult
+  private func dismissAlert() -> String? {
+    let alert = app.alerts.firstMatch
+    guard alert.waitForExistence(timeout: 3) else { return nil }
+    let text = alert.staticTexts.allElementsBoundByIndex.map { $0.label }.joined(separator: " ")
+    alert.buttons.firstMatch.tap()
+    return text
+  }
+
+  /// Adds every catalog plugin from the Plugins tab, opens its detail,
+  /// restarts it when possible and removes it. Each one must leave a visible
+  /// trace (row, card, log line or alert) and the app must keep running.
+  func testEveryCatalogPluginCanBeAddedRestartedAndRemoved() {
+    let plugins = [
+      "clock", "clock-card", "greeter", "counter", "counter-card", "network",
+      "weather", "flaky", "theme", "theme-card", "audit",
+    ]
+    openTab("Plugins")
+    for plugin in plugins {
+      app.navigationBars["Plugins"].buttons["Add plugin"].tap()
+      let choice = app.buttons.containing(.staticText, identifier: plugin).firstMatch
+      reveal(choice)
+      choice.tap()
+      let alert = dismissAlert()
+
+      if plugin == "network" {
+        // a service has no card: it reports in the Timeline's Logs
+        openTab("Timeline")
+        app.buttons["Logs"].tap()
+        let log = app.staticTexts.containing(NSPredicate(format: "label BEGINSWITH 'network: providing service'")).firstMatch
+        XCTAssertTrue(log.waitForExistence(timeout: 5), "network logged nothing")
+        openTab("Plugins")
+      }
+      // network is not in the defaults; every other plugin gets a "-2" entry
+      let id = plugin == "network" ? "network" : "\(plugin)-2"
+      let row = app.staticTexts[id]
+      reveal(row)
+      row.tap()
+      XCTAssertTrue(app.navigationBars[id].waitForExistence(timeout: 5), "detail of \(id)")
+      // the state badge is a Label, which XCUITest may expose as any element type
+      let badges = app.descendants(matching: .any).matching(NSPredicate(format: "label BEGINSWITH 'state '"))
+      XCTAssertTrue(badges.firstMatch.waitForExistence(timeout: 5), "\(id) shows no state")
+      let failed = badges.matching(NSPredicate(format: "label == 'state failed'")).firstMatch.exists
+      if failed { XCTAssertNotNil(alert, "\(id) failed without telling the user") }
+
+      let restart = app.buttons["Restart"]
+      reveal(restart)
+      if restart.isEnabled {
+        restart.tap()
+        dismissAlert()
+      }
+      let remove = app.buttons["Remove entry"]
+      reveal(remove)
+      remove.tap()
+      dismissAlert()
+      if app.navigationBars[id].exists { app.navigationBars.buttons["Plugins"].firstMatch.tap() }
+      XCTAssertTrue(app.navigationBars["Plugins"].waitForExistence(timeout: 5))
+      XCTAssertFalse(app.staticTexts[id].exists, "\(id) still listed after removal")
+      XCTAssertEqual(app.state, .runningForeground, "app stopped after \(plugin)")
+      app.swipeDown()
+      app.swipeDown()
+    }
+  }
+
   func testTourStepWithdrawsTheClockCardAndTheNextStepRestoresIt() {
     openTab("Dashboard")
     XCTAssertTrue(app.staticTexts["Clock"].waitForExistence(timeout: 10))
