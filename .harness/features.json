@@ -136,6 +136,22 @@
       ],
       "test_file": "docs/check.sh",
       "notes": "Landing at docs/index.html (static; highlight.js as progressive enhancement); docs app moved to docs/docs.html; index.html forwards legacy #/ routes. Mobbin references: install hero, editor window, feature card grid, alternating code steps, three-phone showcase."
+    },
+    {
+      "id": "F013",
+      "description": "Pre-submission review of the showcase: every sample plugin reports what it did (card, log or alert), no operation sequence crashes or orphans fibers (Loader serializes reconciles), and the app is restyled to match the website",
+      "status": "in-progress",
+      "assigned_to": "session-5",
+      "scope": [
+        "Sources/Cordis/Loader",
+        "Tests/CordisTests",
+        "Examples/CordisShowcase",
+        "docs",
+        ".harness/init.sh",
+        "xd:/mcp__mobbin_search_screens"
+      ],
+      "test_file": "Examples/CordisShowcase/ShowcaseKit/Tests/ShowcaseKitTests/PluginReviewTests.swift",
+      "notes": "Scope includes xd:/mcp__mobbin_search_screens: the gate treats MCP tool-device writes (Mobbin design references for the redesign) as file paths."
     }
   ]
 }
