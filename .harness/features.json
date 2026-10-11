@@ -122,8 +122,7 @@
         "Package.swift",
         "docs"
       ],
-      "spec": "docs/specs/0001-per-user-plugins.md",
-      "notes": "Server (tests 19-28), admin UI and Epic Drives integration live outside this repo; tracked in Linear (Epic Drives project)."
+      "notes": "Spec: docs/specs/0001-per-user-plugins.md. Linear OVI-204 (Epic drives). Server (tests 19-29), admin UI and Epic Drives integration live outside this repo."
     }
   ]
 }
