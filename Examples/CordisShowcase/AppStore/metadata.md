@@ -23,7 +23,7 @@ Copy these fields into App Store Connect. The length limits are Apple's. `AppSto
 | --- | --- |
 | Support URL | https://github.com/eovidiu/cordis-ios/issues |
 | Marketing URL | https://eovidiu.github.io/cordis-ios/ |
-| Privacy Policy URL | https://eovidiu.github.io/cordis-ios/docs.html#/privacy |
+| Privacy Policy URL | https://eovidiu.github.io/cordis-ios/privacy.html |
 
 ## Version 1.0
 

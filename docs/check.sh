@@ -102,6 +102,16 @@ og = (docs / "assets/og.png").read_bytes()[:24]
 if struct.unpack(">II", og[16:24]) != (1200, 630):
     problems.append("assets/og.png must be 1200x630")
 
+# privacy.html is the App Store privacy URL; it must say what pages/privacy.md says.
+def words(text):
+    text = re.sub(r"<(https?://[^>]+)>", r" \1 ", text)  # Markdown autolinks keep their URL
+    text = re.sub(r"<[^>]+>|\[([^\]]*)\]\([^)]*\)|[*_#]", r"\1", text)
+    return re.findall(r"[a-z0-9']+", text.lower().replace("&#39;", "'"))
+static = (docs / "privacy.html").read_text()
+static = re.search(r"<main>(.*)</main>", static, flags=re.S).group(1)
+if words(static) != words((pages_dir / "privacy.md").read_text()):
+    problems.append("privacy.html differs from pages/privacy.md")
+
 for problem in problems:
     print(f"docs/check.sh: {problem}", file=sys.stderr)
 if problems:
