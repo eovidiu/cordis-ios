@@ -168,14 +168,15 @@
     {
       "id": "F015",
       "description": "Website, docs and README link to Cordis Showcase on the App Store (https://apps.apple.com/us/app/cordis-showcase/id6821575918)",
-      "status": "in_progress",
+      "status": "passing",
       "scope": [
         "docs",
         "README.md",
         ".harness/init.sh",
         ".harness/features.json"
       ],
-      "test_file": "docs/check.sh"
+      "test_file": "docs/check.sh",
+      "notes": "Landing hero 'Get the iPhone app' + showcase section primary 'Download on the App Store' (caption no longer says coming soon), docs showcase page and README link to the listing; docs/check.sh fails if any of the three lacks the URL."
     }
   ]
 }

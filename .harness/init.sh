@@ -14,7 +14,7 @@ filter_for() {
     F005) echo 'Macro' ;;
     F006) echo 'Loader' ;;
     F007) echo 'Demo' ;;
-    F008|F009|F010|F012|F013|F014) echo '' ;;
+    F008|F009|F010|F012|F013|F014|F015) echo '' ;;
     *) echo "unknown feature: $1" >&2; exit 2 ;;
   esac
 }
@@ -34,7 +34,7 @@ case "${1:-}" in
           -project CordisShowcase.xcodeproj -scheme CordisShowcase \
           -destination 'generic/platform=iOS Simulator' -derivedDataPath build/DerivedData \
           -skipMacroValidation -quiet build) ;;
-      F009|F012|F014) docs/check.sh ;;
+      F009|F012|F014|F015) docs/check.sh ;;
       F010)
         # release prep: store metadata and screenshots, docs (privacy page),
         # and the About screen's UI test on a simulator

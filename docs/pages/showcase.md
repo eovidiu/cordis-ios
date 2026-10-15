@@ -1,6 +1,6 @@
 # Showcase app
 
-**Cordis Showcase** is a SwiftUI app for iPhone (iOS 17+). Everything it displays comes from plugins that a cordis `Loader` runs. Its source is in [`Examples/CordisShowcase`](https://github.com/eovidiu/cordis-ios/tree/main/Examples/CordisShowcase).
+**Cordis Showcase** is a SwiftUI app for iPhone (iOS 17+). Everything it displays comes from plugins that a cordis `Loader` runs. [Download it free from the App Store](https://apps.apple.com/us/app/cordis-showcase/id6821575918). Its source is in [`Examples/CordisShowcase`](https://github.com/eovidiu/cordis-ios/tree/main/Examples/CordisShowcase).
 
 The **About** screen (the ⓘ button on the Tour tab, or the Credits card at the end of the tour) credits the original cordis team (Shigma and the cordiverse contributors). It also cites the paper *A Programming Paradigm for Spatiotemporal Composability* (Shi, Zhang and Cui, [arXiv:2608.25512](https://arxiv.org/abs/2608.25512)), links to this Swift port on GitHub, and includes the MIT notices of both projects. The app collects no data; see the [privacy policy](privacy.md).
 

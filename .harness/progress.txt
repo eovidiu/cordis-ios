@@ -13,3 +13,5 @@ Next: user approves, then submit for review.
 Next: F011 (spec 0001); App Store submission on user go-ahead.
 2026-10-11: Cordis Showcase 1.0 (build 2) submitted for App Review (submission 57dd3883, 12:52 UTC), state WAITING_FOR_REVIEW, release AFTER_APPROVAL.
 Next: watch for Apple review result; F011.
+2026-10 session 7: F015 App Store links (landing hero + showcase section, docs showcase page, README) to https://apps.apple.com/us/app/cordis-showcase/id6821575918; docs/check.sh guards them.
+Next: F011.

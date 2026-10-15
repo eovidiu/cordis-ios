@@ -120,6 +120,14 @@ for src in readme_images:
     if not src.startswith("http") and not (repo / src).exists():
         problems.append(f"README.md: missing image {src}")
 
+# Cordis Showcase is live on the App Store; every entry point links to it.
+app_store = "https://apps.apple.com/us/app/cordis-showcase/id6821575918"
+for name, text in [("index.html", landing), ("pages/showcase.md", (pages_dir / "showcase.md").read_text()), ("README.md", readme)]:
+    if app_store not in text:
+        problems.append(f"{name}: no link to the App Store listing")
+if "Coming to the App Store" in landing:
+    problems.append("index.html: still says the app is coming to the App Store")
+
 for problem in problems:
     print(f"docs/check.sh: {problem}", file=sys.stderr)
 if problems:
